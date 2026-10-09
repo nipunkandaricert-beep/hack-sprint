@@ -8,7 +8,7 @@
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <!-- Tesseract.js for browser OCR -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-CBFD05ne.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-white text-slate-800 min-h-screen font-sans antialiased selection:bg-emerald-100 selection:text-emerald-900 pb-20">
 
@@ -248,36 +248,93 @@
     <!-- ================= TAB 2: SCAN & ADD PRESCRIPTION ================= -->
     <section id="view-tab-scan" class="tab-view hidden space-y-6">
       <div class="bg-white border border-[#e3ece6] rounded-3xl p-6 space-y-6 shadow-sm card-shadow">
+        
+        <!-- Header with Engine Status Badge -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-[#e3ece6] pb-4 gap-3">
           <div class="flex items-center gap-3">
             <span class="text-3xl p-2.5 bg-[#f0f6f2] text-[#335542] rounded-2xl border border-[#d2e4d8]">📷</span>
             <div>
-              <h2 class="text-xl font-bold text-[#1b2620]">Scan or Upload Prescription Image</h2>
-              <p class="text-xs text-[#647b6e]">AI OCR will extract medicine names, dosages, and timings into an editable confirmation form.</p>
+              <div class="flex items-center gap-2">
+                <h2 class="text-xl font-bold text-[#1b2620]">Scan or Upload Prescription</h2>
+                <span id="ocr-engine-badge" class="text-[10px] bg-[#f0f6f2] text-[#335542] border border-[#d2e4d8] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">AI OCR Ready</span>
+              </div>
+              <p class="text-xs text-[#647b6e]">Extract medicine names, dosages, and daily timings with live camera capture or image upload.</p>
             </div>
           </div>
-          <button onclick="openSampleRxModal()" class="px-4 py-2 bg-[#f8faf9] hover:bg-[#eef5f1] text-[#25362d] border border-[#e3ece6] font-semibold text-xs rounded-xl transition-all flex items-center gap-2 shadow-sm">
-            <span>🖼️</span> <span>Try Sample Prescription Card</span>
-          </button>
-        </div>
-
-        <div id="dropzone" class="border-2 border-dashed border-[#a4c4b0] hover:border-[#528266] bg-[#f8faf9] p-10 rounded-2xl text-center cursor-pointer transition-colors relative">
-          <input type="file" id="prescription-file-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" onchange="handleFileSelect(event)">
-          <div class="space-y-3">
-            <span class="text-5xl block animate-bounce">📄</span>
-            <div class="font-bold text-[#25362d] text-base" data-i18n="dragOrBrowse">Drag & Drop prescription image here, or click to browse</div>
-            <div class="text-xs text-[#647b6e]">Supports JPG, PNG, WEBP (Uses sample dummy images or photos)</div>
+          <div class="flex items-center gap-2">
+            <button onclick="openCameraModal()" class="px-4 py-2 bg-gradient-to-r from-[#446b53] to-[#355d47] hover:from-[#3a5d48] hover:to-[#2b4c39] text-white font-bold text-xs rounded-xl transition-all flex items-center gap-2 shadow-sm">
+              <span>📸</span> <span>Live Camera Scan</span>
+            </button>
+            <button onclick="openSampleRxModal()" class="px-4 py-2 bg-[#f8faf9] hover:bg-[#eef5f1] text-[#25362d] border border-[#e3ece6] font-semibold text-xs rounded-xl transition-all flex items-center gap-2 shadow-sm">
+              <span>🖼️</span> <span>Sample Rx</span>
+            </button>
           </div>
         </div>
 
-        <div id="image-preview-container" class="hidden space-y-4">
-          <div class="relative max-h-64 overflow-hidden rounded-xl border border-[#e3ece6] bg-[#f8faf9] flex justify-center p-2">
-            <img id="prescription-preview-img" src="" alt="Prescription preview" class="object-contain max-h-60 rounded-lg">
+        <!-- 3-Way Input Selector Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Option 1: Live Camera -->
+          <div onclick="openCameraModal()" class="bg-[#f8faf9] hover:bg-[#f0f6f2] border border-[#e3ece6] hover:border-[#a4c4b0] p-5 rounded-2xl cursor-pointer transition-all flex flex-col items-center text-center space-y-2 group shadow-sm">
+            <div class="w-12 h-12 rounded-2xl bg-[#eaf4ee] text-[#2d553b] flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">📸</div>
+            <div class="font-bold text-sm text-[#1b2620]">Use Live Camera</div>
+            <div class="text-[11px] text-[#647b6e]">Take a real-time photo of a physical prescription note</div>
+          </div>
+
+          <!-- Option 2: File Upload / Drag Drop -->
+          <div onclick="document.getElementById('prescription-file-input').click()" class="bg-[#f8faf9] hover:bg-[#f0f6f2] border border-[#e3ece6] hover:border-[#a4c4b0] p-5 rounded-2xl cursor-pointer transition-all flex flex-col items-center text-center space-y-2 group shadow-sm relative">
+            <div class="w-12 h-12 rounded-2xl bg-[#eaf4f4] text-[#2c6765] flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">📁</div>
+            <div class="font-bold text-sm text-[#1b2620]">Browse / Upload File</div>
+            <div class="text-[11px] text-[#647b6e]">Select JPG, PNG, or WEBP image from device</div>
+          </div>
+
+          <!-- Option 3: Paste or Try Sample -->
+          <div onclick="openSampleRxModal()" class="bg-[#f8faf9] hover:bg-[#f0f6f2] border border-[#e3ece6] hover:border-[#a4c4b0] p-5 rounded-2xl cursor-pointer transition-all flex flex-col items-center text-center space-y-2 group shadow-sm">
+            <div class="w-12 h-12 rounded-2xl bg-[#f8f5ea] text-[#6b5825] flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">🧪</div>
+            <div class="font-bold text-sm text-[#1b2620]">Try Sample Prescription</div>
+            <div class="text-[11px] text-[#647b6e]">Test instant extraction with verified demo doctor slips</div>
+          </div>
+        </div>
+
+        <!-- Hidden Native File Input -->
+        <input type="file" id="prescription-file-input" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+
+        <!-- Drag & Drop Zone Area -->
+        <div id="dropzone" class="border-2 border-dashed border-[#a4c4b0] hover:border-[#528266] bg-[#fcfdfc] p-8 rounded-2xl text-center cursor-pointer transition-colors relative">
+          <div class="space-y-2">
+            <span class="text-4xl block animate-bounce">📄</span>
+            <div class="font-bold text-[#25362d] text-sm" data-i18n="dragOrBrowse">Drag & Drop prescription image here, or click to browse</div>
+            <div class="text-[11px] text-[#647b6e]">Tip: You can also press <kbd class="bg-white border border-[#e3ece6] px-1.5 py-0.5 rounded text-[10px] font-mono text-[#1b2620]">Ctrl + V</kbd> anywhere to paste a copied image</div>
+          </div>
+        </div>
+
+        <!-- Image Preview & Extraction Progress -->
+        <div id="image-preview-container" class="hidden space-y-4 border-t border-[#e3ece6] pt-4">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-[#25362d]">Selected Image Preview</span>
+              <span id="image-meta-text" class="text-[11px] text-[#647b6e]">Ready for scan</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="rotatePreviewImage()" class="px-3 py-1.5 bg-[#f8faf9] hover:bg-[#eef5f1] border border-[#e3ece6] text-[#25362d] text-xs font-bold rounded-xl transition-all flex items-center gap-1">
+                <span>🔄</span> <span>Rotate</span>
+              </button>
+              <button onclick="clearSelectedImage()" class="px-3 py-1.5 bg-[#f8faf9] hover:bg-[#eef5f1] border border-[#e3ece6] text-rose-600 text-xs font-bold rounded-xl transition-all flex items-center gap-1">
+                <span>✕</span> <span>Clear</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="relative max-h-72 overflow-hidden rounded-2xl border border-[#e3ece6] bg-[#f8faf9] flex justify-center p-3">
+            <img id="prescription-preview-img" src="" alt="Prescription preview" class="object-contain max-h-64 rounded-xl transition-transform duration-300">
           </div>
           
+          <!-- OCR Progress Bar -->
           <div id="ocr-progress-box" class="space-y-2 hidden bg-[#f8faf9] p-4 rounded-xl border border-[#e3ece6]">
             <div class="flex justify-between text-xs font-bold">
-              <span class="text-[#335542]" id="ocr-status-text">AI Extracting Details...</span>
+              <span class="text-[#335542] flex items-center gap-1.5" id="ocr-status-text">
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-[#446b53] animate-ping"></span>
+                <span>AI Analyzing & Extracting Medicines...</span>
+              </span>
               <span class="text-[#647b6e]" id="ocr-percentage-text">0%</span>
             </div>
             <div class="w-full bg-[#e3ece6] h-2.5 rounded-full overflow-hidden">
@@ -285,7 +342,8 @@
             </div>
           </div>
 
-          <div class="flex justify-end">
+          <!-- Process Button -->
+          <div class="flex justify-end gap-3 pt-2">
             <button id="process-ocr-btn" onclick="startAIProcess()" disabled class="px-6 py-3 bg-gradient-to-r from-[#446b53] to-[#355d47] hover:from-[#3a5d48] hover:to-[#2b4c39] disabled:opacity-50 text-white font-bold rounded-xl text-sm transition-all shadow-sm flex items-center gap-2">
               <span>🤖</span> <span>Extract & Verify Details</span>
             </button>
@@ -511,64 +569,44 @@
   </div>
 
 
-  <!-- MANDATORY CONFIRMATION MODAL -->
-  <div id="confirm-modal" class="fixed inset-0 bg-slate-900/30 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white border border-[#e3ece6] rounded-3xl max-w-xl w-full p-6 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+  <!-- MANDATORY CONFIRMATION MODAL (SUPPORTS SINGLE & MULTI-MEDICINE BATCHES) -->
+  <div id="confirm-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white border border-[#e3ece6] rounded-3xl max-w-2xl w-full p-6 space-y-5 shadow-2xl relative max-h-[92vh] overflow-y-auto">
       
       <div class="flex items-center justify-between border-b border-[#e3ece6] pb-4">
-        <div class="flex items-center gap-2">
-          <span class="text-2xl">🛡️</span>
+        <div class="flex items-center gap-2.5">
+          <span class="text-2xl p-2 bg-[#f0f6f2] text-[#335542] rounded-2xl border border-[#d2e4d8]">🛡️</span>
           <div>
-            <h3 class="text-xl font-bold text-[#1b2620]" data-i18n="confirmTitle">Confirm Extracted Details</h3>
-            <span class="text-xs text-amber-700 font-semibold" data-i18n="confirmSub">Step Required: Please review & confirm before scheduling!</span>
+            <div class="flex items-center gap-2">
+              <h3 class="text-xl font-bold text-[#1b2620]" data-i18n="confirmTitle">Confirm Extracted Prescriptions</h3>
+              <span id="confirm-meds-count-badge" class="text-[10px] bg-[#eaf4ee] text-[#2d553b] border border-[#cbdec7] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">1 Medicine</span>
+            </div>
+            <span class="text-xs text-amber-700 font-semibold" data-i18n="confirmSub">Please review and adjust extracted dosages or timings before scheduling!</span>
           </div>
         </div>
         <button onclick="closeConfirmModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold p-1">✕</button>
       </div>
 
-      <div class="space-y-4">
-        <div>
-          <label class="block text-xs text-[#647b6e] font-bold uppercase mb-1" data-i18n="medName">Medicine Name</label>
-          <input type="text" id="confirm-med-name" class="w-full bg-[#f8faf9] border border-[#e3ece6] rounded-xl p-3 text-[#1b2620] font-bold text-base focus:border-[#446b53] outline-none">
-        </div>
+      <!-- Dynamic Multi-Med List Container -->
+      <div id="confirm-meds-list" class="space-y-4"></div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs text-[#647b6e] font-bold uppercase mb-1" data-i18n="dosage">Dosage Strength</label>
-            <input type="text" id="confirm-med-dose" placeholder="e.g. 500mg, 1 tablet" class="w-full bg-[#f8faf9] border border-[#e3ece6] rounded-xl p-3 text-[#1b2620] font-bold text-base focus:border-[#446b53] outline-none">
-          </div>
-          <div>
-            <label class="block text-xs text-[#647b6e] font-bold uppercase mb-1" data-i18n="totalPills">Pill Stock (Refill Count)</label>
-            <input type="number" id="confirm-med-stock" value="30" min="1" class="w-full bg-[#f8faf9] border border-[#e3ece6] rounded-xl p-3 text-[#1b2620] font-bold text-base focus:border-[#446b53] outline-none">
-          </div>
-        </div>
+      <!-- Add Another Medicine Row Button -->
+      <div class="flex justify-between items-center pt-2">
+        <button onclick="addNewBlankMedRowToModal()" class="px-3.5 py-2 bg-[#f8faf9] hover:bg-[#eef5f1] text-[#335542] border border-[#d2e4d8] text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 shadow-sm">
+          <span>➕</span> <span>Add Another Medicine Row</span>
+        </button>
 
-        <div>
-          <label class="block text-xs text-[#647b6e] font-bold uppercase mb-1" data-i18n="frequencyPattern">Frequency / Timing Pattern</label>
-          <select id="confirm-med-freq" class="w-full bg-[#f8faf9] border border-[#e3ece6] rounded-xl p-3 text-[#1b2620] font-bold text-base focus:border-[#446b53] outline-none">
-            <option value="1-0-1">1 - 0 - 1 (Morning & Night)</option>
-            <option value="1-1-1">1 - 1 - 1 (Morning, Afternoon, Night)</option>
-            <option value="0-0-1">0 - 0 - 1 (Night Only)</option>
-            <option value="1-0-0">1 - 0 - 0 (Morning Only)</option>
-            <option value="0-1-0">0 - 1 - 0 (Afternoon Only)</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-xs text-[#647b6e] font-bold uppercase mb-1" data-i18n="instructions">Special Instructions</label>
-          <input type="text" id="confirm-med-instructions" placeholder="e.g. Take with food, after breakfast" class="w-full bg-[#f8faf9] border border-[#e3ece6] rounded-xl p-3 text-[#1b2620] text-sm focus:border-[#446b53] outline-none">
-        </div>
-
-        <div id="modal-interaction-alert" class="hidden p-3 bg-[#fcf8ec] border border-[#e8dcb8] rounded-xl text-xs text-[#735818] space-y-1">
-          <strong class="text-amber-800 font-semibold">⚠️ Potential Drug Interaction Warning:</strong>
+        <div id="modal-interaction-alert" class="hidden p-2.5 bg-[#fcf8ec] border border-[#e8dcb8] rounded-xl text-xs text-[#735818] space-y-0.5 max-w-md">
+          <strong class="text-amber-800 font-semibold">⚠️ Potential Drug Interaction:</strong>
           <div id="modal-interaction-text">Checking...</div>
         </div>
       </div>
 
-      <div class="flex justify-end gap-3 pt-2">
+      <!-- Modal Footer Action Buttons -->
+      <div class="flex items-center justify-end gap-3 pt-3 border-t border-[#e3ece6]">
         <button onclick="closeConfirmModal()" class="px-4 py-2.5 bg-[#f4f7f5] hover:bg-[#e9f0ec] text-[#364b40] font-bold rounded-xl text-sm border border-[#e3ece6]" data-i18n="cancel">Cancel</button>
-        <button onclick="saveConfirmedMedication()" class="px-6 py-2.5 bg-gradient-to-r from-[#446b53] to-[#355d47] hover:from-[#3a5d48] hover:to-[#2b4c39] text-white font-bold rounded-xl text-sm transition-all shadow-sm flex items-center gap-2">
-          <span>✅</span> <span data-i18n="confirmAndSchedule">Confirm & Generate Schedule</span>
+        <button onclick="saveAllConfirmedMedications()" id="btn-confirm-save-all" class="px-6 py-2.5 bg-gradient-to-r from-[#446b53] to-[#355d47] hover:from-[#3a5d48] hover:to-[#2b4c39] text-white font-bold rounded-xl text-sm transition-all shadow-sm flex items-center gap-2">
+          <span>✅</span> <span id="confirm-save-btn-label" data-i18n="confirmAndSchedule">Confirm & Generate Schedule</span>
         </button>
       </div>
 
@@ -576,21 +614,51 @@
   </div>
 
 
-  <!-- SAMPLE PRESCRIPTIONS MODAL -->
-  <div id="sample-rx-modal" class="fixed inset-0 bg-slate-900/30 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white border border-[#e3ece6] rounded-3xl max-w-2xl w-full p-6 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-      <div class="flex items-center justify-between border-b border-[#e3ece6] pb-4">
+  <!-- LIVE CAMERA SCANNER MODAL -->
+  <div id="camera-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white border border-[#e3ece6] rounded-3xl max-w-xl w-full p-6 space-y-5 shadow-2xl relative max-h-[95vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-[#e3ece6] pb-3">
         <div class="flex items-center gap-2">
-          <span class="text-2xl">🖼️</span>
-          <h3 class="text-xl font-bold text-[#1b2620]" data-i18n="sampleRxTitle">Choose Sample Prescription</h3>
+          <span class="text-2xl p-1.5 bg-[#f0f6f2] text-[#335542] rounded-xl">📸</span>
+          <div>
+            <h3 class="text-lg font-bold text-[#1b2620]">Live Camera Prescription Scanner</h3>
+            <p class="text-xs text-[#647b6e]">Position your prescription slip inside the guideline box.</p>
+          </div>
         </div>
-        <button onclick="closeSampleRxModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold p-1">✕</button>
+        <button onclick="closeCameraModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold p-1">✕</button>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="sample-cards-grid"></div>
+      <!-- Live Video Viewfinder Container -->
+      <div class="relative bg-slate-950 rounded-2xl overflow-hidden aspect-[4/3] flex items-center justify-center shadow-inner">
+        <video id="camera-video-stream" autoplay playsinline class="w-full h-full object-cover"></video>
+        
+        <!-- Viewfinder Overlay Box -->
+        <div class="absolute inset-6 border-2 border-dashed border-[#a4c4b0]/80 rounded-xl pointer-events-none flex flex-col justify-between p-3">
+          <div class="flex justify-between">
+            <span class="w-4 h-4 border-t-2 border-l-2 border-[#528266]"></span>
+            <span class="w-4 h-4 border-t-2 border-r-2 border-[#528266]"></span>
+          </div>
+          <div class="text-center">
+            <span class="bg-black/60 text-white text-[10px] font-bold px-3 py-1 rounded-full backdrop-blur-sm">Align Prescription Text Here</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="w-4 h-4 border-b-2 border-l-2 border-[#528266]"></span>
+            <span class="w-4 h-4 border-b-2 border-r-2 border-[#528266]"></span>
+          </div>
+        </div>
 
-      <div class="flex justify-end pt-2">
-        <button onclick="closeSampleRxModal()" class="px-4 py-2.5 bg-[#f4f7f5] hover:bg-[#e9f0ec] text-[#364b40] font-bold rounded-xl text-sm border border-[#e3ece6]" data-i18n="close">Close</button>
+        <canvas id="camera-capture-canvas" class="hidden"></canvas>
+      </div>
+
+      <!-- Camera Action Controls -->
+      <div class="flex items-center justify-between gap-3 pt-1">
+        <button onclick="toggleCameraFacing()" id="btn-switch-camera" class="px-3.5 py-2.5 bg-[#f8faf9] hover:bg-[#eef5f1] border border-[#e3ece6] text-[#25362d] font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 shadow-sm">
+          <span>🔄</span> <span>Switch Camera</span>
+        </button>
+
+        <button onclick="captureCameraSnapshot()" class="px-6 py-2.5 bg-gradient-to-r from-[#446b53] to-[#355d47] hover:from-[#3a5d48] hover:to-[#2b4c39] text-white font-bold text-sm rounded-xl shadow-md flex items-center gap-2 active:scale-95 transition-transform">
+          <span>📷</span> <span>Capture & Scan</span>
+        </button>
       </div>
     </div>
   </div>

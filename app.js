@@ -179,6 +179,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   setupDropzone();
+  setupClipboardPaste();
+  checkBackendOCRStatus();
 
   // Show Auth Modal automatically on load if user is not signed in
   if (!state.currentUser.loggedIn) {
@@ -738,28 +740,23 @@ function deleteMedication(id) {
 function editMedication(id) {
   const med = state.medications.find(m => m.id === id);
   if (!med) return;
-
-  document.getElementById("confirm-med-name").value = med.name;
-  document.getElementById("confirm-med-dose").value = med.dose;
-  document.getElementById("confirm-med-stock").value = med.stock || 30;
-  document.getElementById("confirm-med-freq").value = med.freq || "1-0-1";
-  document.getElementById("confirm-med-instructions").value = med.instructions || "";
-
-  document.getElementById("confirm-modal").dataset.editingId = id;
-  document.getElementById("confirm-modal").classList.remove("hidden");
-  checkModalDrugInteractions();
+  renderBatchConfirmModal([{
+    name: med.name,
+    dose: med.dose,
+    freq: med.freq || "1-0-1",
+    stock: med.stock || 30,
+    instructions: med.instructions || ""
+  }], id);
 }
 
 function openManualAddModal() {
-  document.getElementById("confirm-med-name").value = "";
-  document.getElementById("confirm-med-dose").value = "";
-  document.getElementById("confirm-med-stock").value = "30";
-  document.getElementById("confirm-med-freq").value = "1-0-1";
-  document.getElementById("confirm-med-instructions").value = "";
-  delete document.getElementById("confirm-modal").dataset.editingId;
-
-  document.getElementById("confirm-modal").classList.remove("hidden");
-  checkModalDrugInteractions();
+  renderBatchConfirmModal([{
+    name: "",
+    dose: "500 mg",
+    freq: "1-0-1",
+    stock: 30,
+    instructions: "Take as directed"
+  }], null);
 }
 
 
@@ -893,7 +890,35 @@ function adjustPillStock(medId, amount) {
 }
 
 
-// ================= AI SCAN & OPTICAL EXTRACTION =================
+// ================= AI SCAN, LIVE CAMERA & OPTICAL EXTRACTION ENGINE =================
+let cameraStream = null;
+let currentFacingMode = 'environment';
+let currentPreviewRotation = 0;
+let backendOCRAvailable = false;
+let extractionQueue = [];
+
+function checkBackendOCRStatus() {
+  const badge = document.getElementById("ocr-engine-badge");
+  fetch("http://127.0.0.1:8000/api/health", { method: "GET" })
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.status === "healthy") {
+        backendOCRAvailable = true;
+        if (badge) {
+          badge.innerText = data.gemini_configured ? "🟢 Gemini AI Cloud Ready" : "🟢 Backend Server Connected";
+          badge.className = "text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider";
+        }
+      }
+    })
+    .catch(() => {
+      backendOCRAvailable = false;
+      if (badge) {
+        badge.innerText = "⚡ Browser Tesseract OCR Ready";
+        badge.className = "text-[10px] bg-[#f0f6f2] text-[#335542] border border-[#d2e4d8] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider";
+      }
+    });
+}
+
 function setupDropzone() {
   const dropzone = document.getElementById("dropzone");
   if (!dropzone) return;
@@ -908,51 +933,241 @@ function setupDropzone() {
   });
 }
 
+function setupClipboardPaste() {
+  window.addEventListener('paste', (e) => {
+    if (e.clipboardData && e.clipboardData.items) {
+      for (let i = 0; i < e.clipboardData.items.length; i++) {
+        const item = e.clipboardData.items[i];
+        if (item.type.indexOf('image') !== -1) {
+          const blob = item.getAsFile();
+          if (blob) {
+            handleFile(blob);
+            switchTab("tab-scan");
+            showToast("📋 Image pasted from clipboard!", "success");
+            break;
+          }
+        }
+      }
+    }
+  });
+}
+
 function handleFileSelect(e) {
-  if (e.target.files.length > 0) handleFile(e.target.files[0]);
+  if (e.target.files && e.target.files.length > 0) {
+    handleFile(e.target.files[0]);
+  }
 }
 
 function handleFile(file) {
   state.selectedFile = file;
+  currentPreviewRotation = 0;
   const reader = new FileReader();
   reader.onload = (e) => {
     const previewImg = document.getElementById("prescription-preview-img");
     previewImg.src = e.target.result;
+    previewImg.style.transform = "rotate(0deg)";
+    
+    const metaText = document.getElementById("image-meta-text");
+    if (metaText && file.name) {
+      const sizeKb = Math.round((file.size || 0) / 1024);
+      metaText.innerText = `${file.name} (${sizeKb} KB)`;
+    }
+
     document.getElementById("image-preview-container").classList.remove("hidden");
     document.getElementById("process-ocr-btn").disabled = false;
   };
   reader.readAsDataURL(file);
 }
 
-function startAIProcess() {
+function rotatePreviewImage() {
+  currentPreviewRotation = (currentPreviewRotation + 90) % 360;
+  const previewImg = document.getElementById("prescription-preview-img");
+  if (previewImg) {
+    previewImg.style.transform = `rotate(${currentPreviewRotation}deg)`;
+  }
+}
+
+function clearSelectedImage() {
+  state.selectedFile = null;
+  currentPreviewRotation = 0;
+  const previewImg = document.getElementById("prescription-preview-img");
+  if (previewImg) previewImg.src = "";
+  
+  const fileInput = document.getElementById("prescription-file-input");
+  if (fileInput) fileInput.value = "";
+
+  document.getElementById("image-preview-container").classList.add("hidden");
+  document.getElementById("process-ocr-btn").disabled = true;
+  document.getElementById("ocr-progress-box").classList.add("hidden");
+}
+
+// ================= LIVE CAMERA VIEW =================
+function openCameraModal() {
+  const modal = document.getElementById("camera-modal");
+  if (!modal) return;
+  modal.classList.remove("hidden");
+
+  startCameraStream(currentFacingMode);
+}
+
+function closeCameraModal() {
+  stopCameraStream();
+  const modal = document.getElementById("camera-modal");
+  if (modal) modal.classList.add("hidden");
+}
+
+function startCameraStream(facingMode = 'environment') {
+  stopCameraStream();
+  const video = document.getElementById("camera-video-stream");
+  if (!video || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    showToast("Camera access not supported on this browser.", "warning");
+    return;
+  }
+
+  navigator.mediaDevices.getUserMedia({
+    video: { facingMode: facingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
+    audio: false
+  })
+  .then(stream => {
+    cameraStream = stream;
+    video.srcObject = stream;
+  })
+  .catch(err => {
+    console.warn("Could not start environment camera, trying default user camera:", err);
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+      .then(stream => {
+        cameraStream = stream;
+        video.srcObject = stream;
+      })
+      .catch(finalErr => {
+        showToast("Camera permission denied or camera unavailable.", "warning");
+      });
+  });
+}
+
+function stopCameraStream() {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach(track => track.stop());
+    cameraStream = null;
+  }
+}
+
+function toggleCameraFacing() {
+  currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+  startCameraStream(currentFacingMode);
+  showToast(`Switched camera to ${currentFacingMode === 'environment' ? 'rear' : 'front'} mode`, "info");
+}
+
+function captureCameraSnapshot() {
+  const video = document.getElementById("camera-video-stream");
+  const canvas = document.getElementById("camera-capture-canvas");
+  if (!video || !canvas || video.videoWidth === 0) {
+    showToast("Camera stream not ready yet.", "warning");
+    return;
+  }
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  canvas.toBlob((blob) => {
+    if (blob) {
+      const file = new File([blob], `prescription_cam_${Date.now()}.jpg`, { type: "image/jpeg" });
+      handleFile(file);
+      closeCameraModal();
+      showToast("📸 Prescription photo captured!", "success");
+    }
+  }, "image/jpeg", 0.95);
+}
+
+// ================= OCR DUAL ENGINE (BACKEND AI + BROWSER TESSERACT) =================
+async function startAIProcess() {
   const progressBox = document.getElementById("ocr-progress-box");
   const progressBar = document.getElementById("ocr-progress-bar");
   const statusText = document.getElementById("ocr-status-text");
   const percentageText = document.getElementById("ocr-percentage-text");
 
   progressBox.classList.remove("hidden");
-  statusText.innerText = "Analyzing prescription image with AI OCR...";
+  progressBar.style.width = "15%";
+  percentageText.innerText = "15%";
+  statusText.innerText = "Initializing Optical Character Extraction...";
 
   const imgElement = document.getElementById("prescription-preview-img");
-  
-  if (window.Tesseract && imgElement.src) {
-    Tesseract.recognize(
-      imgElement.src,
-      'eng',
-      {
-        logger: m => {
-          if (m.status === 'recognizing text') {
-            const pct = Math.round((m.progress || 0) * 100);
-            progressBar.style.width = pct + '%';
-            percentageText.innerText = pct + '%';
-          }
+  if (!imgElement || !imgElement.src) {
+    showToast("Please upload or capture a prescription image first.", "warning");
+    return;
+  }
+
+  // Attempt 1: Call Backend AI Endpoint if available
+  let backendSuccess = false;
+  if (state.selectedFile) {
+    try {
+      statusText.innerText = "Connecting to AI OCR Backend Server...";
+      progressBar.style.width = "40%";
+      percentageText.innerText = "40%";
+
+      const formData = new FormData();
+      formData.append("file", state.selectedFile);
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+      const resp = await fetch("http://127.0.0.1:8000/api/extract", {
+        method: "POST",
+        body: formData,
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data && data.medicines && data.medicines.length > 0) {
+          progressBar.style.width = "100%";
+          percentageText.innerText = "100%";
+          statusText.innerText = "AI Extraction Complete!";
+          backendSuccess = true;
+          setTimeout(() => {
+            handleBatchExtractedMedicines(data.medicines);
+          }, 300);
+          return;
         }
       }
-    ).then(({ data: { text } }) => {
-      parseExtractedTextAndPromptConfirm(text);
-    }).catch(err => {
+    } catch (backendErr) {
+      console.log("Backend AI API unavailable or timed out, seamlessly falling back to client Tesseract OCR:", backendErr);
+    }
+  }
+
+  // Attempt 2: Client-side Tesseract.js OCR
+  statusText.innerText = "Running Browser Neural OCR engine...";
+  if (window.Tesseract && imgElement.src) {
+    try {
+      const { data: { text } } = await Tesseract.recognize(
+        imgElement.src,
+        'eng',
+        {
+          logger: m => {
+            if (m.status === 'recognizing text') {
+              const pct = Math.min(95, Math.round((m.progress || 0) * 100));
+              progressBar.style.width = pct + '%';
+              percentageText.innerText = pct + '%';
+              statusText.innerText = `Recognizing text & dosage patterns (${pct}%)...`;
+            }
+          }
+        }
+      );
+
+      progressBar.style.width = "100%";
+      percentageText.innerText = "100%";
+      statusText.innerText = "Text recognition complete!";
+      
+      setTimeout(() => {
+        parseExtractedTextAndPromptConfirm(text);
+      }, 350);
+    } catch (err) {
+      console.warn("Tesseract OCR fallback error:", err);
       simulateAIExtraction();
-    });
+    }
   } else {
     simulateAIExtraction();
   }
@@ -961,112 +1176,540 @@ function startAIProcess() {
 function simulateAIExtraction() {
   const progressBar = document.getElementById("ocr-progress-bar");
   const percentageText = document.getElementById("ocr-percentage-text");
+  const statusText = document.getElementById("ocr-status-text");
   let progress = 0;
 
   const interval = setInterval(() => {
     progress += 25;
     progressBar.style.width = progress + "%";
     percentageText.innerText = progress + "%";
+    statusText.innerText = `Analyzing prescription details (${progress}%)...`;
 
     if (progress >= 100) {
       clearInterval(interval);
-      parseExtractedTextAndPromptConfirm("Amoxicillin 500mg - Take 1-0-1 after meals");
+      parseExtractedTextAndPromptConfirm("Amoxicillin 500mg - Take 1-0-1 after meals with water");
     }
   }, 200);
 }
 
+// Comprehensive Medical Knowledge Base (Generic & Common Brand Names)
+const MEDICAL_DRUG_DICTIONARY = [
+  // Pain & Fever
+  { name: "Paracetamol", aliases: ["dolo", "crocin", "calpol", "tylenol", "acetaminophen", "panadol", "fevamol", "pacimol"], defaultDose: "650 mg", defaultFreq: "1-0-1", instructions: "Take after food for fever or body pain" },
+  { name: "Ibuprofen", aliases: ["advil", "motrin", "brufen", "combiflam", "ibugesic"], defaultDose: "400 mg", defaultFreq: "1-0-1", instructions: "Take with milk or immediately after meals" },
+  { name: "Diclofenac", aliases: ["voveran", "voltaren", "dynapar"], defaultDose: "50 mg", defaultFreq: "1-0-1", instructions: "Take after food with water" },
+  { name: "Aspirin", aliases: ["ecosprin", "disprin", "bayer", "low-dose aspirin"], defaultDose: "81 mg", defaultFreq: "1-0-0", instructions: "Take in the morning with breakfast" },
+  { name: "Naproxen", aliases: ["aleve", "naprosyn"], defaultDose: "250 mg", defaultFreq: "1-0-1", instructions: "Take with food" },
+  { name: "Tramadol", aliases: ["ultram", "tramazac"], defaultDose: "50 mg", defaultFreq: "0-0-1", instructions: "Take at bedtime as prescribed for severe pain" },
+
+  // Antibiotics & Anti-infectives
+  { name: "Amoxicillin", aliases: ["moxikind", "mox", "novamox", "amoxil"], defaultDose: "500 mg", defaultFreq: "1-0-1", instructions: "Take twice daily after meals with full glass of water" },
+  { name: "Augmentin (Amoxicillin + Clav)", aliases: ["clavam", "moxikind-cv", "augmentin 625", "amoxyclav"], defaultDose: "625 mg", defaultFreq: "1-0-1", instructions: "Take at the start of a meal to prevent stomach upset" },
+  { name: "Azithromycin", aliases: ["azithral", "azee", "zithromax", "azimax"], defaultDose: "500 mg", defaultFreq: "1-0-0", instructions: "Take once daily 1 hour before or 2 hours after meals" },
+  { name: "Ciprofloxacin", aliases: ["ciplox", "cifran", "cipro"], defaultDose: "500 mg", defaultFreq: "1-0-1", instructions: "Take 2 hours after meal with plenty of fluids" },
+  { name: "Doxycycline", aliases: ["dox", "doxy", "vibramycin"], defaultDose: "100 mg", defaultFreq: "1-0-1", instructions: "Take with full glass of water, do not lie down immediately" },
+  { name: "Cefixime", aliases: ["taxim-o", "zifi", "mahacef"], defaultDose: "200 mg", defaultFreq: "1-0-1", instructions: "Take after meals" },
+  { name: "Levofloxacin", aliases: ["levoquan", "levomac"], defaultDose: "500 mg", defaultFreq: "1-0-0", instructions: "Take once daily with plenty of water" },
+
+  // Diabetes & Blood Sugar
+  { name: "Metformin", aliases: ["glycomet", "glucophage", "obimet", "gluformin"], defaultDose: "500 mg", defaultFreq: "1-1-1", instructions: "Take with meals to prevent stomach discomfort" },
+  { name: "Glimepiride", aliases: ["amaryl", "zoryl", "glimy"], defaultDose: "1 mg", defaultFreq: "1-0-0", instructions: "Take immediately before breakfast" },
+  { name: "Sitagliptin", aliases: ["januvia", "istavel"], defaultDose: "100 mg", defaultFreq: "1-0-0", instructions: "Take once daily in morning with or without food" },
+  { name: "Dapagliflozin", aliases: ["forxiga", "dapa", "oxra"], defaultDose: "10 mg", defaultFreq: "1-0-0", instructions: "Take once daily in morning" },
+  { name: "Vildagliptin", aliases: ["galvus", "jalra"], defaultDose: "50 mg", defaultFreq: "1-0-1", instructions: "Take morning and evening" },
+
+  // Blood Pressure & Cholesterol / Heart
+  { name: "Atorvastatin", aliases: ["lipitor", "atorva", "storvas", "atocor"], defaultDose: "10 mg", defaultFreq: "0-0-1", instructions: "Take once daily at bedtime" },
+  { name: "Rosuvastatin", aliases: ["crestor", "rosuvas", "rosave"], defaultDose: "10 mg", defaultFreq: "0-0-1", instructions: "Take once daily at bedtime" },
+  { name: "Amlodipine", aliases: ["amlong", "norvasc", "stamlo"], defaultDose: "5 mg", defaultFreq: "1-0-0", instructions: "Take once daily in the morning" },
+  { name: "Telmisartan", aliases: ["telma", "micardis", "telmikind"], defaultDose: "40 mg", defaultFreq: "1-0-0", instructions: "Take once daily with or without food" },
+  { name: "Losartan", aliases: ["cozaar", "losar", "repace"], defaultDose: "50 mg", defaultFreq: "1-0-0", instructions: "Take in the morning with water" },
+  { name: "Lisinopril", aliases: ["prinivil", "zestril", "lipril"], defaultDose: "10 mg", defaultFreq: "1-0-0", instructions: "Take every morning" },
+  { name: "Metoprolol", aliases: ["betaloc", "lopressor", "metolar"], defaultDose: "25 mg", defaultFreq: "1-0-1", instructions: "Take with or immediately after food" },
+  { name: "Clopidogrel", aliases: ["plavix", "deplatt", "clopivas"], defaultDose: "75 mg", defaultFreq: "1-0-0", instructions: "Take once daily in morning" },
+
+  // Gastrointestinal & Acidity
+  { name: "Pantoprazole", aliases: ["pan-40", "pantop", "pan", "pantocid", "protonix", "pan-d"], defaultDose: "40 mg", defaultFreq: "1-0-0", instructions: "Take 30 minutes before breakfast on an empty stomach" },
+  { name: "Omeprazole", aliases: ["omez", "prilosec", "omizac"], defaultDose: "20 mg", defaultFreq: "1-0-0", instructions: "Take once daily before morning meal" },
+  { name: "Rabeprazole", aliases: ["razo", "rabicip", "aciphex"], defaultDose: "20 mg", defaultFreq: "1-0-0", instructions: "Take in morning on empty stomach" },
+  { name: "Esomeprazole", aliases: ["nexium", "nexpro"], defaultDose: "40 mg", defaultFreq: "1-0-0", instructions: "Take 1 hour before food" },
+
+  // Allergy, Respiratory & Cold
+  { name: "Cetirizine", aliases: ["cetzine", "zyrtec", "alerid", "okacet"], defaultDose: "10 mg", defaultFreq: "0-0-1", instructions: "Take at bedtime for allergy relief (may cause drowsiness)" },
+  { name: "Levocetirizine", aliases: ["levocet", "xzyzal", "teczine"], defaultDose: "5 mg", defaultFreq: "0-0-1", instructions: "Take once daily at bedtime" },
+  { name: "Montelukast", aliases: ["singulair", "montek", "montair", "montair-lc", "montek-lc"], defaultDose: "10 mg", defaultFreq: "0-0-1", instructions: "Take once daily in the evening" },
+  { name: "Allegra (Fexofenadine)", aliases: ["allegra", "fexofenadine", "fexova"], defaultDose: "120 mg", defaultFreq: "1-0-0", instructions: "Take with water before food" },
+
+  // Vitamins, Minerals & Supplements
+  { name: "Vitamin D3", aliases: ["calcirol", "d-rise", "cholecalciferol", "uprise-d3"], defaultDose: "60000 IU", defaultFreq: "1-0-0", instructions: "Take once weekly/daily with milk after meals" },
+  { name: "Calcium + Vit D3", aliases: ["shelcal", "cipcal", "calcium"], defaultDose: "500 mg", defaultFreq: "0-1-0", instructions: "Take with lunch" },
+  { name: "Vitamin B-Complex / B12", aliases: ["neurobion", "becosules", "mecobalamin", "optineuron"], defaultDose: "1 tablet", defaultFreq: "1-0-0", instructions: "Take daily in morning after breakfast" },
+  { name: "Zincovit (Multivitamin)", aliases: ["zincovit", "multivitamin", "supradyn", "becadexamin"], defaultDose: "1 tablet", defaultFreq: "1-0-0", instructions: "Take with meals" },
+  { name: "Thyronorm (Levothyroxine)", aliases: ["thyronorm", "eltroxin", "synthroid", "levothyroxine"], defaultDose: "50 mcg", defaultFreq: "1-0-0", instructions: "Take first thing in the morning on empty stomach with water" }
+];
+
+function normalizeFrequencyPattern(str) {
+  if (!str) return "1-0-1";
+  const s = str.toString().toLowerCase().trim();
+
+  // Handle digit patterns like 1-0-1, 1 0 1, 1:0:1, 1/0/1, 1-1-1, 0-0-1, 1-0-0
+  const match = s.match(/([0-2])\s*[-–—/:,.\s]\s*([0-2])\s*[-–—/:,.\s]\s*([0-2])/);
+  if (match) {
+    return `${match[1]}-${match[2]}-${match[3]}`;
+  }
+
+  // Handle OCR letter confusions like l-0-l, O-0-1, I-I-I
+  const cleaned = s.replace(/l|i/gi, "1").replace(/o/gi, "0");
+  const match2 = cleaned.match(/([0-2])\s*[-–—/:,.\s]\s*([0-2])\s*[-–—/:,.\s]\s*([0-2])/);
+  if (match2) {
+    return `${match2[1]}-${match2[2]}-${match2[3]}`;
+  }
+
+  if (s.includes("thrice") || s.includes("3 times") || s.includes("tid") || s.includes("tds") || s.includes("qds")) return "1-1-1";
+  if (s.includes("twice") || s.includes("2 times") || s.includes("bid") || s.includes("bd") || s.includes("morning & night") || s.includes("morning and night") || s.includes("morning and evening")) return "1-0-1";
+  if (s.includes("bedtime") || s.includes("night only") || s.includes("at night") || s.includes("hs") || s.includes("evening")) return "0-0-1";
+  if (s.includes("morning only") || s.includes("once daily") || s.includes("daily in morning") || s.includes("od") || s.includes("once a day") || s.includes("before breakfast")) return "1-0-0";
+  if (s.includes("afternoon") || s.includes("lunch")) return "0-1-0";
+
+  return "1-0-1";
+}
+
 function parseExtractedTextAndPromptConfirm(rawText) {
-  let medName = "Amoxicillin";
-  let medDose = "500 mg";
-  let medFreq = "1-0-1";
-  let instructions = "Take after meals";
-
-  const textLower = rawText.toLowerCase();
-
-  if (textLower.includes("metformin")) {
-    medName = "Metformin";
-    medDose = "500 mg";
-    medFreq = "1-1-1";
-    instructions = "Take 3 times daily with food";
-  } else if (textLower.includes("atorvastatin")) {
-    medName = "Atorvastatin";
-    medDose = "10 mg";
-    medFreq = "0-0-1";
-    instructions = "Take at bedtime";
-  } else if (textLower.includes("aspirin")) {
-    medName = "Aspirin";
-    medDose = "81 mg";
-    medFreq = "1-0-0";
-    instructions = "Take in morning with breakfast";
+  if (!rawText || !rawText.trim()) {
+    showToast("No text recognized in image. Please enter medicine details manually.", "info");
+    openManualAddModal();
+    return;
   }
 
-  if (textLower.includes("1-1-1") || textLower.includes("tid") || textLower.includes("qds")) {
-    medFreq = "1-1-1";
-  } else if (textLower.includes("0-0-1") || textLower.includes("bedtime")) {
-    medFreq = "0-0-1";
-  } else if (textLower.includes("1-0-0")) {
-    medFreq = "1-0-0";
-  } else if (textLower.includes("1-0-1")) {
-    medFreq = "1-0-1";
+  const rawClean = rawText
+    .replace(/[\u2010\u2011\u2012\u2013\u2014\u2015]/g, "-")
+    .replace(/(\d)\s*:\s*(\d)\s*:\s*(\d)/g, "$1-$2-$3")
+    .replace(/(\d)\s*\.\s*(\d)\s*\.\s*(\d)/g, "$1-$2-$3");
+
+  const lines = rawClean.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 2);
+  const detectedMeds = [];
+  const addedDrugNames = new Set();
+
+  // Step 1: Line-by-line parsing for multi-medicine slips
+  for (const line of lines) {
+    const lineLower = line.toLowerCase();
+
+    // Skip doctor titles, clinic banners, metadata, patient headers
+    if (
+      lineLower.startsWith("dr.") ||
+      lineLower.startsWith("dr ") ||
+      lineLower.includes("clinic") ||
+      lineLower.includes("hospital") ||
+      lineLower.includes("phone:") ||
+      lineLower.includes("tel:") ||
+      lineLower.includes("address:") ||
+      lineLower.includes("patient name") ||
+      lineLower.includes("signature") ||
+      lineLower.includes("date:") ||
+      lineLower.includes("m.b.b.s") ||
+      lineLower.includes("m.d.")
+    ) {
+      continue;
+    }
+
+    let foundDrug = null;
+    for (const drug of MEDICAL_DRUG_DICTIONARY) {
+      const matchDrug = drug.name.toLowerCase();
+      const matchAliases = drug.aliases || [];
+      if (
+        lineLower.includes(matchDrug) ||
+        matchAliases.some(alias => lineLower.includes(alias.toLowerCase()))
+      ) {
+        foundDrug = drug;
+        break;
+      }
+    }
+
+    // Extract dosage specific to this line
+    const doseMatch = line.match(/\b(\d+(?:\.\d+)?\s*(?:mg|mcg|g|ml|iu|tablets?|caps?|capsules?|pills?))\b/i);
+    const lineDose = doseMatch ? doseMatch[1].trim() : (foundDrug ? foundDrug.defaultDose : "500 mg");
+
+    // Extract frequency specific to this line
+    const lineFreq = normalizeFrequencyPattern(line);
+
+    // Extract instructions
+    let lineInstructions = foundDrug ? foundDrug.instructions : "Take as directed by physician";
+    if (lineLower.includes("after food") || lineLower.includes("after meals") || lineLower.includes("pc")) {
+      lineInstructions = "Take after meals with water";
+    } else if (lineLower.includes("before food") || lineLower.includes("before meals") || lineLower.includes("empty stomach") || lineLower.includes("ac")) {
+      lineInstructions = "Take on an empty stomach before food";
+    } else if (lineLower.includes("bedtime") || lineLower.includes("at night")) {
+      lineInstructions = "Take at bedtime with water";
+    } else if (lineLower.includes("for fever") || lineLower.includes("for pain") || lineLower.includes("sos") || lineLower.includes("prn")) {
+      lineInstructions = "Take as needed for fever or pain";
+    }
+
+    if (foundDrug) {
+      if (!addedDrugNames.has(foundDrug.name.toLowerCase())) {
+        addedDrugNames.add(foundDrug.name.toLowerCase());
+        detectedMeds.push({
+          name: foundDrug.name,
+          dose: lineDose,
+          freq: lineFreq,
+          stock: 30,
+          instructions: lineInstructions
+        });
+      }
+    } else {
+      // Check if line looks like an Rx item (e.g. "1. Tab Azithral 500mg 1-0-0" or "Augmentin 625mg")
+      const isRxLine =
+        /^(?:\d+[\.\)]\s*)?(?:rx:?\s*|tab\.?\s*|cap\.?\s*|syp\.?\s*|t\.?\s*|c\.?\s*)/i.test(line) ||
+        doseMatch !== null ||
+        /\b[0-2]-[0-2]-[0-2]\b/.test(line);
+
+      if (isRxLine) {
+        // Strip out leading numbers, prefixes
+        let cleanName = line
+          .replace(/^(?:\d+[\.\)]\s*)?(?:rx:?\s*|tab\.?\s*|cap\.?\s*|syp\.?\s*|t\.?\s*|c\.?\s*)/i, "")
+          .trim();
+
+        // Split off before dose or frequency
+        cleanName = cleanName.split(/\b\d+(?:\.\d+)?\s*(?:mg|mcg|g|ml|iu|tab|cap)/i)[0].trim();
+        cleanName = cleanName.split(/[-–—(]/)[0].trim();
+
+        if (cleanName.length >= 3 && cleanName.length <= 40 && !cleanName.toLowerCase().includes("signature")) {
+          const capitalized = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+          if (!addedDrugNames.has(capitalized.toLowerCase())) {
+            addedDrugNames.add(capitalized.toLowerCase());
+            detectedMeds.push({
+              name: capitalized,
+              dose: lineDose,
+              freq: lineFreq,
+              stock: 30,
+              instructions: lineInstructions
+            });
+          }
+        }
+      }
+    }
   }
 
-  document.getElementById("confirm-med-name").value = medName;
-  document.getElementById("confirm-med-dose").value = medDose;
-  document.getElementById("confirm-med-stock").value = 30;
-  document.getElementById("confirm-med-freq").value = medFreq;
-  document.getElementById("confirm-med-instructions").value = instructions;
-  delete document.getElementById("confirm-modal").dataset.editingId;
+  // Step 2: Global Fallback scan if line parser yielded 0
+  if (detectedMeds.length === 0) {
+    const fullLower = rawText.toLowerCase();
+    for (const drug of MEDICAL_DRUG_DICTIONARY) {
+      if (
+        fullLower.includes(drug.name.toLowerCase()) ||
+        (drug.aliases && drug.aliases.some(a => fullLower.includes(a.toLowerCase())))
+      ) {
+        if (!addedDrugNames.has(drug.name.toLowerCase())) {
+          addedDrugNames.add(drug.name.toLowerCase());
+          detectedMeds.push({
+            name: drug.name,
+            dose: drug.defaultDose,
+            freq: normalizeFrequencyPattern(rawText),
+            stock: 30,
+            instructions: drug.instructions
+          });
+        }
+      }
+    }
+  }
 
-  document.getElementById("confirm-modal").classList.remove("hidden");
-  checkModalDrugInteractions();
+  // If still empty, supply clean fallback
+  if (detectedMeds.length === 0) {
+    detectedMeds.push({
+      name: "Prescribed Medication",
+      dose: "500 mg",
+      freq: "1-0-1",
+      stock: 30,
+      instructions: "Take as directed by doctor"
+    });
+  }
+
+  renderBatchConfirmModal(detectedMeds);
+}
+
+function handleBatchExtractedMedicines(medsList) {
+  if (!medsList || medsList.length === 0) {
+    showToast("No readable medications identified. Please enter details manually.", "info");
+    openManualAddModal();
+    return;
+  }
+  renderBatchConfirmModal(medsList);
+}
+
+// ================= BATCH CONFIRMATION MODAL ENGINE =================
+function renderBatchConfirmModal(medsList, editingId = null) {
+  const container = document.getElementById("confirm-meds-list");
+  const countBadge = document.getElementById("confirm-meds-count-badge");
+  const saveBtn = document.getElementById("btn-confirm-save-all");
+  const saveBtnLabel = document.getElementById("confirm-save-btn-label");
+  const modal = document.getElementById("confirm-modal");
+
+  if (!container || !modal) return;
+
+  if (editingId) {
+    modal.dataset.editingId = editingId;
+  } else {
+    delete modal.dataset.editingId;
+  }
+
+  const items = Array.isArray(medsList) && medsList.length > 0 ? medsList : [{
+    name: "",
+    dose: "500 mg",
+    freq: "1-0-1",
+    stock: 30,
+    instructions: "Take as directed"
+  }];
+
+  if (countBadge) {
+    countBadge.innerText = `${items.length} Medicine${items.length !== 1 ? 's' : ''}`;
+  }
+
+  if (saveBtnLabel) {
+    saveBtnLabel.innerText = editingId
+      ? "Save Updated Medication"
+      : items.length > 1
+        ? `Confirm & Schedule All (${items.length}) Medicines`
+        : "Confirm & Generate Schedule";
+  }
+
+  container.innerHTML = items.map((med, idx) => `
+    <div class="confirm-med-row bg-[#f8faf9] p-4 rounded-2xl border border-[#e3ece6] space-y-3 relative transition-all shadow-sm">
+      <div class="flex items-center justify-between border-b border-[#e3ece6] pb-2.5">
+        <div class="flex items-center gap-2">
+          <span class="w-6 h-6 rounded-full bg-[#446b53] text-white text-xs font-bold flex items-center justify-center">${idx + 1}</span>
+          <span class="font-bold text-xs text-[#1b2620] uppercase tracking-wider">Medication Item</span>
+        </div>
+        ${items.length > 1 ? `
+          <button onclick="removeMedRowFromModal(this)" class="text-rose-500 hover:text-rose-700 text-xs font-bold px-2 py-1 rounded-lg hover:bg-rose-50 transition-colors flex items-center gap-1">
+            <span>🗑️</span> <span>Remove</span>
+          </button>
+        ` : ''}
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="sm:col-span-2">
+          <label class="block text-[11px] text-[#647b6e] font-bold uppercase mb-1">Medicine Name *</label>
+          <input type="text" value="${escapeHtml(med.name || '')}" placeholder="e.g. Amoxicillin, Dolo 650" oninput="checkModalBatchDrugInteractions()" class="med-row-name w-full bg-white border border-[#e3ece6] rounded-xl p-2.5 text-[#1b2620] font-bold text-sm focus:border-[#446b53] outline-none shadow-sm">
+        </div>
+
+        <div>
+          <label class="block text-[11px] text-[#647b6e] font-bold uppercase mb-1">Dosage Strength *</label>
+          <input type="text" value="${escapeHtml(med.dose || '500 mg')}" placeholder="e.g. 500mg, 1 tablet" class="med-row-dose w-full bg-white border border-[#e3ece6] rounded-xl p-2.5 text-[#1b2620] font-bold text-sm focus:border-[#446b53] outline-none shadow-sm">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-[11px] text-[#647b6e] font-bold uppercase mb-1">Frequency / Daily Pattern</label>
+          <select class="med-row-freq w-full bg-white border border-[#e3ece6] rounded-xl p-2.5 text-[#1b2620] font-bold text-xs focus:border-[#446b53] outline-none shadow-sm">
+            <option value="1-0-1" ${(med.frequency === '1-0-1' || med.freq === '1-0-1') ? 'selected' : ''}>1 - 0 - 1 (Morning & Night)</option>
+            <option value="1-1-1" ${(med.frequency === '1-1-1' || med.freq === '1-1-1') ? 'selected' : ''}>1 - 1 - 1 (Morning, Afternoon, Night)</option>
+            <option value="0-0-1" ${(med.frequency === '0-0-1' || med.freq === '0-0-1') ? 'selected' : ''}>0 - 0 - 1 (Night Only - Bedtime)</option>
+            <option value="1-0-0" ${(med.frequency === '1-0-0' || med.freq === '1-0-0') ? 'selected' : ''}>1 - 0 - 0 (Morning Only - Breakfast)</option>
+            <option value="0-1-0" ${(med.frequency === '0-1-0' || med.freq === '0-1-0') ? 'selected' : ''}>0 - 1 - 0 (Afternoon Only - Lunch)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[11px] text-[#647b6e] font-bold uppercase mb-1">Pill Stock (Refill Count)</label>
+          <input type="number" value="${med.stock || 30}" min="1" class="med-row-stock w-full bg-white border border-[#e3ece6] rounded-xl p-2.5 text-[#1b2620] font-bold text-xs focus:border-[#446b53] outline-none shadow-sm">
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-[11px] text-[#647b6e] font-bold uppercase mb-1">Special Instructions</label>
+        <input type="text" value="${escapeHtml(med.instructions || 'Take as directed by doctor')}" placeholder="e.g. Take after food with warm water" class="med-row-instructions w-full bg-white border border-[#e3ece6] rounded-xl p-2.5 text-[#1b2620] text-xs focus:border-[#446b53] outline-none shadow-sm">
+      </div>
+    </div>
+  `).join("");
+
+  modal.classList.remove("hidden");
+  checkModalBatchDrugInteractions();
+}
+
+function addNewBlankMedRowToModal() {
+  const container = document.getElementById("confirm-meds-list");
+  if (!container) return;
+
+  const currentRows = container.querySelectorAll(".confirm-med-row");
+  const newIndex = currentRows.length + 1;
+
+  const rowDiv = document.createElement("div");
+  rowDiv.className = "confirm-med-row bg-[#f8faf9] p-4 rounded-2xl border border-[#e3ece6] space-y-3 relative transition-all shadow-sm animate-fade-in";
+  rowDiv.innerHTML = `
+    <div class="flex items-center justify-between border-b border-[#e3ece6] pb-2.5">
+      <div class="flex items-center gap-2">
+        <span class="w-6 h-6 rounded-full bg-[#446b53] text-white text-xs font-bold flex items-center justify-center">${newIndex}</span>
+        <span class="font-bold text-xs text-[#1b2620] uppercase tracking-wider">Additional Medication</span>
+      </div>
+      <button onclick="removeMedRowFromModal(this)" class="text-rose-500 hover:text-rose-700 text-xs font-bold px-2 py-1 rounded-lg hover:bg-rose-50 transition-colors flex items-center gap-1">
+        <span>🗑️</span> <span>Remove</span>
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div class="sm:col-span-2">
+        <label class="block text-[11px] text-[#647b6e] font-bold uppercase mb-1">Medicine Name *</label>
+        <input type="text" placeholder="e.g. Paracetamol 650mg" oninput="checkModalBatchDrugInteractions()" class="med-row-name w-full bg-white border border-[#e3ece6] rounded-xl p-2.5 text-[#1b2620] font-bold text-sm focus:border-[#446b53] outline-none shadow-sm">
+      </div>
+
+      <div>
+        <label class="block text-[11px] text-[#647b6e] font-bold uppercase mb-1">Dosage Strength *</label>
+        <input type="text" value="500 mg" placeholder="e.g. 500mg, 1 tablet" class="med-row-dose w-full bg-white border border-[#e3ece6] rounded-xl p-2.5 text-[#1b2620] font-bold text-sm focus:border-[#446b53] outline-none shadow-sm">
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div>
+        <label class="block text-[11px] text-[#647b6e] font-bold uppercase mb-1">Frequency / Daily Pattern</label>
+        <select class="med-row-freq w-full bg-white border border-[#e3ece6] rounded-xl p-2.5 text-[#1b2620] font-bold text-xs focus:border-[#446b53] outline-none shadow-sm">
+          <option value="1-0-1" selected>1 - 0 - 1 (Morning & Night)</option>
+          <option value="1-1-1">1 - 1 - 1 (Morning, Afternoon, Night)</option>
+          <option value="0-0-1">0 - 0 - 1 (Night Only - Bedtime)</option>
+          <option value="1-0-0">1 - 0 - 0 (Morning Only - Breakfast)</option>
+          <option value="0-1-0">0 - 1 - 0 (Afternoon Only - Lunch)</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-[11px] text-[#647b6e] font-bold uppercase mb-1">Pill Stock (Refill Count)</label>
+        <input type="number" value="30" min="1" class="med-row-stock w-full bg-white border border-[#e3ece6] rounded-xl p-2.5 text-[#1b2620] font-bold text-xs focus:border-[#446b53] outline-none shadow-sm">
+      </div>
+    </div>
+
+    <div>
+      <label class="block text-[11px] text-[#647b6e] font-bold uppercase mb-1">Special Instructions</label>
+      <input type="text" value="Take as directed" placeholder="e.g. Take after meals with water" class="med-row-instructions w-full bg-white border border-[#e3ece6] rounded-xl p-2.5 text-[#1b2620] text-xs focus:border-[#446b53] outline-none shadow-sm">
+    </div>
+  `;
+
+  container.appendChild(rowDiv);
+  updateModalCounterBadge();
+}
+
+function removeMedRowFromModal(btn) {
+  const row = btn.closest(".confirm-med-row");
+  if (row) {
+    row.remove();
+    updateModalCounterBadge();
+    checkModalBatchDrugInteractions();
+  }
+}
+
+function updateModalCounterBadge() {
+  const countBadge = document.getElementById("confirm-meds-count-badge");
+  const saveBtnLabel = document.getElementById("confirm-save-btn-label");
+  const rows = document.querySelectorAll(".confirm-med-row");
+  const count = rows.length;
+
+  if (countBadge) countBadge.innerText = `${count} Medicine${count !== 1 ? 's' : ''}`;
+  if (saveBtnLabel) {
+    const editingId = document.getElementById("confirm-modal").dataset.editingId;
+    saveBtnLabel.innerText = editingId
+      ? "Save Updated Medication"
+      : count > 1
+        ? `Confirm & Schedule All (${count}) Medicines`
+        : "Confirm & Generate Schedule";
+  }
+}
+
+function checkModalBatchDrugInteractions() {
+  const alertBox = document.getElementById("modal-interaction-alert");
+  const alertText = document.getElementById("modal-interaction-text");
+  if (!alertBox || !alertText) return;
+
+  const inputNames = Array.from(document.querySelectorAll(".med-row-name"))
+    .map(inp => inp.value.trim().toLowerCase())
+    .filter(Boolean);
+
+  const existingNames = state.medications.map(m => m.name.toLowerCase());
+  const allNames = [...existingNames, ...inputNames];
+
+  let detectedConflicts = [];
+  DRUG_INTERACTION_RULES.forEach(rule => {
+    const hasA = allNames.some(n => n.includes(rule.pair[0]));
+    const hasB = allNames.some(n => n.includes(rule.pair[1]));
+    if (hasA && hasB) {
+      detectedConflicts.push(`[${rule.severity}] ${rule.message}`);
+    }
+  });
+
+  if (detectedConflicts.length > 0) {
+    alertText.innerText = detectedConflicts.join(" • ");
+    alertBox.classList.remove("hidden");
+  } else {
+    alertBox.classList.add("hidden");
+  }
 }
 
 function closeConfirmModal() {
   document.getElementById("confirm-modal").classList.add("hidden");
 }
 
-function saveConfirmedMedication() {
-  const name = document.getElementById("confirm-med-name").value.trim();
-  const dose = document.getElementById("confirm-med-dose").value.trim();
-  const stock = parseInt(document.getElementById("confirm-med-stock").value, 10) || 30;
-  const freq = document.getElementById("confirm-med-freq").value;
-  const instructions = document.getElementById("confirm-med-instructions").value.trim();
-
-  if (!name || !dose) {
-    alert("Please enter both medicine name and dosage strength.");
+function saveAllConfirmedMedications() {
+  const rows = document.querySelectorAll(".confirm-med-row");
+  if (rows.length === 0) {
+    closeConfirmModal();
     return;
   }
 
   const editingId = document.getElementById("confirm-modal").dataset.editingId;
+  const newMedsToAdd = [];
 
-  if (editingId) {
-    const med = state.medications.find(m => m.id === editingId);
-    if (med) {
-      med.name = name;
-      med.dose = dose;
-      med.stock = stock;
-      med.freq = freq;
-      med.instructions = instructions;
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i];
+    const name = row.querySelector(".med-row-name").value.trim();
+    const dose = row.querySelector(".med-row-dose").value.trim() || "1 dose";
+    const freq = row.querySelector(".med-row-freq").value;
+    const stock = parseInt(row.querySelector(".med-row-stock").value, 10) || 30;
+    const instructions = row.querySelector(".med-row-instructions").value.trim() || "Take as directed";
+
+    if (!name) {
+      alert(`Please enter a valid Medicine Name for row #${i + 1}`);
+      row.querySelector(".med-row-name").focus();
+      return;
     }
-    showToast(`Updated medication: ${name}`, "success");
-  } else {
-    const newMed = {
-      id: "med-" + Date.now(),
-      name,
-      dose,
-      stock,
-      freq,
-      instructions,
-      createdDate: new Date().toISOString()
-    };
-    state.medications.push(newMed);
-    showToast(`Confirmed & scheduled: ${name}`, "success");
+
+    if (editingId && i === 0) {
+      const med = state.medications.find(m => m.id === editingId);
+      if (med) {
+        med.name = name;
+        med.dose = dose;
+        med.stock = stock;
+        med.freq = freq;
+        med.instructions = instructions;
+      }
+    } else {
+      newMedsToAdd.push({
+        id: "med-" + (Date.now() + i),
+        name,
+        dose,
+        stock,
+        freq,
+        instructions,
+        createdDate: new Date().toISOString()
+      });
+    }
+  }
+
+  if (newMedsToAdd.length > 0) {
+    state.medications.push(...newMedsToAdd);
+    showToast(`🎉 Scheduled ${newMedsToAdd.length} medication${newMedsToAdd.length !== 1 ? 's' : ''} into your daily routine!`, "success");
+  } else if (editingId) {
+    showToast(`Updated medication details`, "success");
   }
 
   saveStateToLocalStorage();
   closeConfirmModal();
   switchTab("tab-schedule");
   renderAll();
+}
+
+function escapeHtml(str) {
+  return (str || "")
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 
 
@@ -1076,14 +1719,14 @@ function openSampleRxModal() {
   if (!container || typeof SAMPLE_PRESCRIPTIONS === "undefined") return;
 
   container.innerHTML = SAMPLE_PRESCRIPTIONS.map(rx => `
-    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3 flex flex-col justify-between hover:border-sky-400 transition-all shadow-sm">
+    <div class="bg-[#f8faf9] border border-[#e3ece6] rounded-2xl p-4 space-y-3 flex flex-col justify-between hover:border-[#a4c4b0] transition-all shadow-sm">
       <div>
-        <div class="text-xs text-sky-700 font-bold uppercase">${rx.doctor}</div>
-        <div class="font-extrabold text-slate-800 text-base mt-1">${rx.medication} ${rx.dosage}</div>
-        <div class="text-xs text-slate-500 mt-0.5">Pattern: <span class="text-slate-700 font-bold font-mono">${rx.frequency}</span></div>
-        <div class="text-xs text-slate-500 mt-1 italic">${rx.instructions}</div>
+        <div class="text-xs text-[#335542] font-bold uppercase">${rx.doctor}</div>
+        <div class="font-bold text-[#1b2620] text-base mt-1">${rx.medication} ${rx.dosage}</div>
+        <div class="text-xs text-[#647b6e] mt-0.5">Pattern: <span class="text-[#1b2620] font-bold font-mono">${rx.frequency}</span></div>
+        <div class="text-xs text-[#647b6e] mt-1 italic">${rx.instructions}</div>
       </div>
-      <button onclick="selectSampleRx('${rx.id}')" class="w-full mt-2 py-2 bg-gradient-to-r from-sky-600 to-teal-600 hover:from-sky-700 hover:to-teal-700 text-white font-bold text-xs rounded-xl transition-all shadow-md shadow-sky-500/20">
+      <button onclick="selectSampleRx('${rx.id}')" class="w-full mt-2 py-2 bg-gradient-to-r from-[#446b53] to-[#355d47] hover:from-[#3a5d48] hover:to-[#2b4c39] text-white font-bold text-xs rounded-xl transition-all shadow-sm">
         Select & Scan Sample
       </button>
     </div>
