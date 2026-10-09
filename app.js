@@ -1246,22 +1246,30 @@ const MEDICAL_DRUG_DICTIONARY = [
   { name: "Calcium + Vit D3", aliases: ["shelcal", "cipcal", "calcium"], defaultDose: "500 mg", defaultFreq: "0-1-0", instructions: "Take with lunch" },
   { name: "Vitamin B-Complex / B12", aliases: ["neurobion", "becosules", "mecobalamin", "optineuron"], defaultDose: "1 tablet", defaultFreq: "1-0-0", instructions: "Take daily in morning after breakfast" },
   { name: "Zincovit (Multivitamin)", aliases: ["zincovit", "multivitamin", "supradyn", "becadexamin"], defaultDose: "1 tablet", defaultFreq: "1-0-0", instructions: "Take with meals" },
+  // Bone, Joint & Special Regional Brands
+  { name: "Ultrafen-Plus (Diclofenac)", aliases: ["ultrafen", "ultrafen-plus", "ultrafen plus"], defaultDose: "50 mg", defaultFreq: "1-0-1", instructions: "Take after meals with water" },
+  { name: "Relentus", aliases: ["relentus"], defaultDose: "1 tablet", defaultFreq: "0-0-1", instructions: "Take at bedtime" },
+  { name: "Progut (Probiotic)", aliases: ["progut", "progut 200mg", "progut 200"], defaultDose: "200 mg", defaultFreq: "1-0-1", instructions: "Take before meals" },
+  { name: "Ultracal-D (Calcium + Vit D3)", aliases: ["ultracal", "ultracal-d", "ultracal d"], defaultDose: "1 tablet", defaultFreq: "0-1-0", instructions: "Take after lunch with water" },
+  { name: "Cartilix (Glucosamine)", aliases: ["cartilix"], defaultDose: "1 tablet", defaultFreq: "1-0-1", instructions: "Take after food with water" },
   { name: "Thyronorm (Levothyroxine)", aliases: ["thyronorm", "eltroxin", "synthroid", "levothyroxine"], defaultDose: "50 mcg", defaultFreq: "1-0-0", instructions: "Take first thing in the morning on empty stomach with water" }
 ];
 
 function normalizeFrequencyPattern(str) {
   if (!str) return "1-0-1";
-  const s = str.toString().toLowerCase().trim();
+  // Convert Bengali numbers & clean spaces
+  let s = str.toString().toLowerCase().trim()
+    .replace(/১/g, "1").replace(/২/g, "2").replace(/০/g, "0");
 
-  // Handle digit patterns like 1-0-1, 1 0 1, 1:0:1, 1/0/1, 1-1-1, 0-0-1, 1-0-0
-  const match = s.match(/([0-2])\s*[-â€“â€”/:,.\s]\s*([0-2])\s*[-â€“â€”/:,.\s]\s*([0-2])/);
+  // Handle patterns with plus, minus, slash, dot, colon (e.g. 1+0+1, 1-0-1, 1 0 1, 1/0/1)
+  const match = s.match(/([0-2])\s*[\+\-/:,.\s]\s*([0-2])\s*[\+\-/:,.\s]\s*([0-2])/);
   if (match) {
     return `${match[1]}-${match[2]}-${match[3]}`;
   }
 
   // Handle OCR letter confusions like l-0-l, O-0-1, I-I-I
   const cleaned = s.replace(/l|i/gi, "1").replace(/o/gi, "0");
-  const match2 = cleaned.match(/([0-2])\s*[-â€“â€”/:,.\s]\s*([0-2])\s*[-â€“â€”/:,.\s]\s*([0-2])/);
+  const match2 = cleaned.match(/([0-2])\s*[\+\-/:,.\s]\s*([0-2])\s*[\+\-/:,.\s]\s*([0-2])/);
   if (match2) {
     return `${match2[1]}-${match2[2]}-${match2[3]}`;
   }
@@ -1303,6 +1311,7 @@ function parseExtractedTextAndPromptConfirm(rawText) {
       lineLower.includes("address:") || lineLower.includes("patient name") ||
       lineLower.includes("signature") || lineLower.includes("date:") ||
       lineLower.includes("m.b.b.s") || lineLower.includes("m.d.") ||
+      /\b(c\/o|chief complaint|pain|knee|stairs|bony|lesion|x-?ray|mri|physio|exercise|knee cap|address|dhaka|shyamoli|road|block|fax|consultant|center|centre)\b/i.test(lineLower) ||
       /^(name|age|gender|weight|diagnosis|reg\.?\s*no)[:\s]/i.test(lineLower)
     ) { continue; }
 
@@ -1342,7 +1351,7 @@ function parseExtractedTextAndPromptConfirm(rawText) {
       const isRxLine =
         /^(?:\d+[\.\)]\s*)?(?:rx:?\s*|tab\.?\s*|cap\.?\s*|syp\.?\s*|inj\.?\s*|t\.?\s*|c\.?\s*)/i.test(line) ||
         doseMatch !== null ||
-        /\b[0-2]-[0-2]-[0-2]\b/.test(line);
+        /\b[0-2]\s*[\+\-/:,.\s]\s*[0-2]\s*[\+\-/:,.\s]\s*[0-2]\b/.test(line);
 
       if (isRxLine) {
         let cleanName = line
