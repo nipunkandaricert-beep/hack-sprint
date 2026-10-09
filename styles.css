@@ -1,0 +1,318 @@
+/* DoseBuddy — Peaceful & Modern Sage-Green Healthcare Theme */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  /* Color Palette */
+  --bg-main: #ffffff;
+  --bg-subtle: #f8faf9;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fcfdfc;
+  
+  /* Primary Sage Accent */
+  --sage-50: #f2f7f4;
+  --sage-100: #e3ede7;
+  --sage-200: #c8ded0;
+  --sage-300: #a4c4b0;
+  --sage-400: #78a38a;
+  --sage-500: #528266;
+  --sage-600: #446b53;
+  --sage-700: #335542;
+  --sage-800: #274233;
+
+  /* Secondary Soft Teal Accent */
+  --teal-50: #f0f8f7;
+  --teal-100: #dbeefd;
+  --teal-500: #387e7c;
+  --teal-600: #2b6664;
+  --teal-700: #204e4d;
+
+  /* Supporting Neutrals */
+  --warm-ivory: #fcfbfa;
+  --charcoal-900: #1b2620;
+  --charcoal-800: #25362d;
+  --charcoal-700: #364b40;
+  --charcoal-600: #4c6356;
+  --charcoal-500: #647b6e;
+  --charcoal-400: #889f92;
+  --border-soft: #e3ece6;
+  --border-subtle: #edf3ef;
+
+  /* Shadows */
+  --shadow-subtle: 0 1px 3px rgba(30, 48, 38, 0.03), 0 4px 16px rgba(30, 48, 38, 0.04);
+  --shadow-card: 0 2px 8px rgba(30, 48, 38, 0.04), 0 12px 28px rgba(30, 48, 38, 0.03);
+  --shadow-hover: 0 6px 20px rgba(65, 107, 83, 0.1), 0 2px 6px rgba(30, 48, 38, 0.03);
+}
+
+* {
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background-color: var(--bg-main) !important;
+  background-image: 
+    radial-gradient(ellipse at 8% 12%, rgba(82, 130, 102, 0.035) 0%, transparent 45%),
+    radial-gradient(ellipse at 92% 8%, rgba(56, 126, 124, 0.03) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 90%, rgba(82, 130, 102, 0.025) 0%, transparent 40%) !important;
+  background-attachment: fixed;
+  color: var(--charcoal-900);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+/* Custom Minimal Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #f4f8f5;
+}
+::-webkit-scrollbar-thumb {
+  background: #c8ded0;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a4c4b0;
+}
+
+/* Header & Glass Effect */
+.header-glass {
+  background: rgba(255, 255, 255, 0.97) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+/* Peaceful Medical Hero Banner */
+.medical-hero {
+  background: linear-gradient(135deg, #f3f8f5 0%, #ebf4ef 50%, #f6faf8 100%) !important;
+  border-color: var(--border-soft) !important;
+}
+
+/* Clean Cards & Shadows */
+.card-shadow {
+  box-shadow: var(--shadow-subtle);
+  border-color: var(--border-soft);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+.card-shadow:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: #c8ded0;
+}
+
+/* Column Calming Gradients */
+.morning-gradient {
+  background: linear-gradient(180deg, #f4f9f6 0%, #ffffff 100%) !important;
+  border-color: #d1e5d9 !important;
+}
+
+.afternoon-gradient {
+  background: linear-gradient(180deg, #faf9f4 0%, #ffffff 100%) !important;
+  border-color: #e8e4d3 !important;
+}
+
+.night-gradient {
+  background: linear-gradient(180deg, #f1f7f7 0%, #ffffff 100%) !important;
+  border-color: #d0e4e4 !important;
+}
+
+/* Tab Button Styling */
+.nav-tab-btn {
+  background: #f8faf9 !important;
+  border-color: var(--border-soft) !important;
+  color: var(--charcoal-600) !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-tab-btn:hover {
+  background: #eef5f1 !important;
+  border-color: #c8ded0 !important;
+  color: var(--charcoal-900) !important;
+}
+
+.nav-tab-btn.active-tab {
+  background: linear-gradient(135deg, #446b53 0%, #355d47 100%) !important;
+  color: #ffffff !important;
+  border-color: #355d47 !important;
+  box-shadow: 0 3px 12px rgba(53, 93, 71, 0.25) !important;
+}
+
+/* Auth Tab Styling */
+.auth-tab-btn.active-auth-tab {
+  border-bottom: 2.5px solid #446b53 !important;
+  color: #335542 !important;
+  font-weight: 700;
+}
+
+/* Subtle Botanical Details */
+.botanical-accent {
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.15;
+  color: #446b53;
+}
+
+/* Accessible Focus States */
+button:focus-visible, 
+input:focus-visible, 
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #528266 !important;
+  outline-offset: 2px;
+}
+
+/* Card & Neutral Palette Theme Harmonization */
+.bg-slate-50 {
+  background-color: #f8faf9 !important;
+}
+.border-slate-200 {
+  border-color: #e3ece6 !important;
+}
+.border-slate-100 {
+  border-color: #eef4f0 !important;
+}
+.text-slate-800 {
+  color: #1b2620 !important;
+}
+.text-slate-700 {
+  color: #25362d !important;
+}
+.text-slate-600 {
+  color: #4c6356 !important;
+}
+.text-slate-500 {
+  color: #647b6e !important;
+}
+.text-slate-400 {
+  color: #889f92 !important;
+}
+
+/* Sky/Blue/Purple/Indigo to Sage/Teal Harmonization */
+.bg-sky-50 {
+  background-color: #f0f6f2 !important;
+}
+.text-sky-700 {
+  color: #335542 !important;
+}
+.text-sky-600 {
+  color: #446b53 !important;
+}
+.border-sky-200, .border-sky-100 {
+  border-color: #d2e4d8 !important;
+}
+
+.bg-indigo-50 {
+  background-color: #f0f6f3 !important;
+}
+.text-indigo-700 {
+  color: #335542 !important;
+}
+.border-indigo-200 {
+  border-color: #d2e4d8 !important;
+}
+
+/* Primary Button Gradients */
+.bg-gradient-to-r.from-sky-600.to-teal-600,
+.bg-gradient-to-r.from-emerald-600.to-teal-600 {
+  background-image: linear-gradient(135deg, #446b53 0%, #355d47 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(53, 93, 71, 0.2) !important;
+}
+.bg-gradient-to-r.from-sky-600.to-teal-600:hover,
+.bg-gradient-to-r.from-emerald-600.to-teal-600:hover {
+  background-image: linear-gradient(135deg, #3a5d48 0%, #2b4c39 100%) !important;
+}
+
+.shadow-sky-500\/20,
+.shadow-emerald-500\/20 {
+  box-shadow: 0 4px 12px rgba(68, 107, 83, 0.18) !important;
+}
+
+/* Status Badges */
+.bg-emerald-50 {
+  background-color: #eaf4ee !important;
+}
+.text-emerald-700, .text-emerald-800 {
+  color: #2d553b !important;
+}
+.border-emerald-200, .border-emerald-300 {
+  border-color: #cbdec7 !important;
+}
+
+.bg-rose-50 {
+  background-color: #fdf3f3 !important;
+}
+.text-rose-700, .text-rose-600 {
+  color: #a33232 !important;
+}
+.border-rose-200, .border-rose-300 {
+  border-color: #f6d1d1 !important;
+}
+
+/* SENIOR ACCESSIBILITY MODE OVERRIDES */
+body.senior-mode {
+  font-size: 19px !important;
+  line-height: 1.6 !important;
+  background-color: #ffffff !important;
+}
+
+body.senior-mode h1 {
+  font-size: 2.25rem !important;
+  color: #1b2620 !important;
+}
+
+body.senior-mode h2 {
+  font-size: 1.85rem !important;
+  color: #1b2620 !important;
+}
+
+body.senior-mode h3 {
+  font-size: 1.5rem !important;
+  color: #1b2620 !important;
+}
+
+body.senior-mode button,
+body.senior-mode input,
+body.senior-mode select {
+  font-size: 17px !important;
+  min-height: 52px !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+body.senior-mode .text-xs {
+  font-size: 14px !important;
+}
+
+body.senior-mode .text-sm {
+  font-size: 16px !important;
+}
+
+body.senior-mode .border-slate-200,
+body.senior-mode .border-gray-200,
+body.senior-mode .border-gray-300 {
+  border-color: #335542 !important;
+  border-width: 2px !important;
+}
+
+/* Utilities */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
