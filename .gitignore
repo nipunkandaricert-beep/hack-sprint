@@ -1,4 +1,14 @@
-# Dependencies and temp files
+# Dependencies and build output
 node_modules/
+dist/
 .DS_Store
 *.log
+
+# Package manager files (project uses CDN, no build step needed)
+package-lock.json
+package.json
+
+# Editor junk
+.vscode/
+.idea/
+Thumbs.db
