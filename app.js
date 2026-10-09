@@ -1,4 +1,4 @@
-/**
+﻿/**
  * DoseBuddy - Smart Prescription Reminder App Logic
  * Tabbed Workspace, Google Calendar Integration, Multi-User Auth & Pre-filled Admin Login
  */
@@ -76,56 +76,56 @@ const I18N = {
     selectDate: "Select Date:"
   },
   hi: {
-    disclaimerTitle: "चिकित्सा अस्वीकरण:",
-    disclaimerBody: "DoseBuddy केवल एक अनुस्मारक सहायता है। यह चिकित्सा सलाह प्रदान नहीं करता है।",
-    tagline: "तारीख इतिहास और कल की दवाओं के साथ स्मार्ट दवा अनुस्मारक",
-    seniorMode: "वरिष्ठ दृश्य",
-    enableNotifs: "अलर्ट",
-    login: "साइन इन / रजिस्टर",
-    tabSchedule: "दैनिक शेड्यूल",
-    tabScan: "स्कैन करें",
-    tabGcal: "गूगल कैलेंडर सिंक",
-    tabMeds: "दवाएं",
-    tabRefill: "रिफिल स्टॉक",
-    tabSafety: "सुरक्षा केंद्र",
-    todayOverview: "दवाओं का विवरण",
-    adherenceScore: "अनुपालन दर",
-    readAloud: "सुनाएं",
-    readDetailedSchedule: "शेष दवाओं का विवरण सुनें",
-    taken: "ली गई",
-    skip: "छोड़ी",
-    pending: "आगामी",
-    hearInstruction: "निर्देश सुनें",
-    prevDay: "पिछला दिन",
-    today: "आज",
-    tomorrow: "कल",
-    selectDate: "तारीख चुनें:"
+    disclaimerTitle: "à¤šà¤¿à¤•à¤¿à¤¤à¥à¤¸à¤¾ à¤…à¤¸à¥à¤µà¥€à¤•à¤°à¤£:",
+    disclaimerBody: "DoseBuddy à¤•à¥‡à¤µà¤² à¤à¤• à¤…à¤¨à¥à¤¸à¥à¤®à¤¾à¤°à¤• à¤¸à¤¹à¤¾à¤¯à¤¤à¤¾ à¤¹à¥ˆà¥¤ à¤¯à¤¹ à¤šà¤¿à¤•à¤¿à¤¤à¥à¤¸à¤¾ à¤¸à¤²à¤¾à¤¹ à¤ªà¥à¤°à¤¦à¤¾à¤¨ à¤¨à¤¹à¥€à¤‚ à¤•à¤°à¤¤à¤¾ à¤¹à¥ˆà¥¤",
+    tagline: "à¤¤à¤¾à¤°à¥€à¤– à¤‡à¤¤à¤¿à¤¹à¤¾à¤¸ à¤”à¤° à¤•à¤² à¤•à¥€ à¤¦à¤µà¤¾à¤“à¤‚ à¤•à¥‡ à¤¸à¤¾à¤¥ à¤¸à¥à¤®à¤¾à¤°à¥à¤Ÿ à¤¦à¤µà¤¾ à¤…à¤¨à¥à¤¸à¥à¤®à¤¾à¤°à¤•",
+    seniorMode: "à¤µà¤°à¤¿à¤·à¥à¤  à¤¦à¥ƒà¤¶à¥à¤¯",
+    enableNotifs: "à¤…à¤²à¤°à¥à¤Ÿ",
+    login: "à¤¸à¤¾à¤‡à¤¨ à¤‡à¤¨ / à¤°à¤œà¤¿à¤¸à¥à¤Ÿà¤°",
+    tabSchedule: "à¤¦à¥ˆà¤¨à¤¿à¤• à¤¶à¥‡à¤¡à¥à¤¯à¥‚à¤²",
+    tabScan: "à¤¸à¥à¤•à¥ˆà¤¨ à¤•à¤°à¥‡à¤‚",
+    tabGcal: "à¤—à¥‚à¤—à¤² à¤•à¥ˆà¤²à¥‡à¤‚à¤¡à¤° à¤¸à¤¿à¤‚à¤•",
+    tabMeds: "à¤¦à¤µà¤¾à¤à¤‚",
+    tabRefill: "à¤°à¤¿à¤«à¤¿à¤² à¤¸à¥à¤Ÿà¥‰à¤•",
+    tabSafety: "à¤¸à¥à¤°à¤•à¥à¤·à¤¾ à¤•à¥‡à¤‚à¤¦à¥à¤°",
+    todayOverview: "à¤¦à¤µà¤¾à¤“à¤‚ à¤•à¤¾ à¤µà¤¿à¤µà¤°à¤£",
+    adherenceScore: "à¤…à¤¨à¥à¤ªà¤¾à¤²à¤¨ à¤¦à¤°",
+    readAloud: "à¤¸à¥à¤¨à¤¾à¤à¤‚",
+    readDetailedSchedule: "à¤¶à¥‡à¤· à¤¦à¤µà¤¾à¤“à¤‚ à¤•à¤¾ à¤µà¤¿à¤µà¤°à¤£ à¤¸à¥à¤¨à¥‡à¤‚",
+    taken: "à¤²à¥€ à¤—à¤ˆ",
+    skip: "à¤›à¥‹à¤¡à¤¼à¥€",
+    pending: "à¤†à¤—à¤¾à¤®à¥€",
+    hearInstruction: "à¤¨à¤¿à¤°à¥à¤¦à¥‡à¤¶ à¤¸à¥à¤¨à¥‡à¤‚",
+    prevDay: "à¤ªà¤¿à¤›à¤²à¤¾ à¤¦à¤¿à¤¨",
+    today: "à¤†à¤œ",
+    tomorrow: "à¤•à¤²",
+    selectDate: "à¤¤à¤¾à¤°à¥€à¤– à¤šà¥à¤¨à¥‡à¤‚:"
   },
   te: {
-    disclaimerTitle: "వైద్య ప్రకటన (Disclaimer):",
-    disclaimerBody: "DoseBuddy కేవలం ఔషధ రిమైండర్ సహాయకం మాత్రమే. ఇది వైద్య సలహాలను అందించదు. ఎల్లప్పుడూ మీ వైద్యుడితో వివరాలను సరిచూసుకోండి.",
-    tagline: "గత చరిత్ర మరియు రేపటి మందుల వివరాలతో స్మార్ట్ ప్రిస్క్రిప్షన్ యాప్",
-    seniorMode: "సీనియర్ వ్యూ",
-    enableNotifs: "అలర్ట్‌లు",
-    login: "లాగిన్ / రిజిస్టర్",
-    tabSchedule: "రోజువారీ షెడ్యూల్",
-    tabScan: "స్క్యాన్ & జోడించు",
-    tabGcal: "గూగుల్ క్యాలెండర్ సింక్",
-    tabMeds: "మందుల జాబితా",
-    tabRefill: "రీఫిల్ ట్రాకర్",
-    tabSafety: "కేర్‌టేకర్ & భద్రత",
-    todayOverview: "మందుల వివరాలు",
-    adherenceScore: "మందుల వాడకం శాతం",
-    readAloud: "చదివి వినిపించు",
-    readDetailedSchedule: "మిగిలిన మందుల వివరాలు వినండి",
-    taken: "వేసుకున్నారు",
-    skip: "వదిలేశారు",
-    pending: "రాబోయేవి",
-    hearInstruction: "సూచన వినండి",
-    prevDay: "నిన్నటి రోజు",
-    today: "ఈరోజు",
-    tomorrow: "రేపు",
-    selectDate: "తేదీ ఎంచుకోండి:"
+    disclaimerTitle: "à°µà±ˆà°¦à±à°¯ à°ªà±à°°à°•à°Ÿà°¨ (Disclaimer):",
+    disclaimerBody: "DoseBuddy à°•à±‡à°µà°²à°‚ à°”à°·à°§ à°°à°¿à°®à±ˆà°‚à°¡à°°à± à°¸à°¹à°¾à°¯à°•à°‚ à°®à°¾à°¤à±à°°à°®à±‡. à°‡à°¦à°¿ à°µà±ˆà°¦à±à°¯ à°¸à°²à°¹à°¾à°²à°¨à± à°…à°‚à°¦à°¿à°‚à°šà°¦à±. à°Žà°²à±à°²à°ªà±à°ªà±à°¡à±‚ à°®à±€ à°µà±ˆà°¦à±à°¯à±à°¡à°¿à°¤à±‹ à°µà°¿à°µà°°à°¾à°²à°¨à± à°¸à°°à°¿à°šà±‚à°¸à±à°•à±‹à°‚à°¡à°¿.",
+    tagline: "à°—à°¤ à°šà°°à°¿à°¤à±à°° à°®à°°à°¿à°¯à± à°°à±‡à°ªà°Ÿà°¿ à°®à°‚à°¦à±à°² à°µà°¿à°µà°°à°¾à°²à°¤à±‹ à°¸à±à°®à°¾à°°à±à°Ÿà± à°ªà±à°°à°¿à°¸à±à°•à±à°°à°¿à°ªà±à°·à°¨à± à°¯à°¾à°ªà±",
+    seniorMode: "à°¸à±€à°¨à°¿à°¯à°°à± à°µà±à°¯à±‚",
+    enableNotifs: "à°…à°²à°°à±à°Ÿà±â€Œà°²à±",
+    login: "à°²à°¾à°—à°¿à°¨à± / à°°à°¿à°œà°¿à°¸à±à°Ÿà°°à±",
+    tabSchedule: "à°°à±‹à°œà±à°µà°¾à°°à±€ à°·à±†à°¡à±à°¯à±‚à°²à±",
+    tabScan: "à°¸à±à°•à±à°¯à°¾à°¨à± & à°œà±‹à°¡à°¿à°‚à°šà±",
+    tabGcal: "à°—à±‚à°—à±à°²à± à°•à±à°¯à°¾à°²à±†à°‚à°¡à°°à± à°¸à°¿à°‚à°•à±",
+    tabMeds: "à°®à°‚à°¦à±à°² à°œà°¾à°¬à°¿à°¤à°¾",
+    tabRefill: "à°°à±€à°«à°¿à°²à± à°Ÿà±à°°à°¾à°•à°°à±",
+    tabSafety: "à°•à±‡à°°à±â€Œà°Ÿà±‡à°•à°°à± & à°­à°¦à±à°°à°¤",
+    todayOverview: "à°®à°‚à°¦à±à°² à°µà°¿à°µà°°à°¾à°²à±",
+    adherenceScore: "à°®à°‚à°¦à±à°² à°µà°¾à°¡à°•à°‚ à°¶à°¾à°¤à°‚",
+    readAloud: "à°šà°¦à°¿à°µà°¿ à°µà°¿à°¨à°¿à°ªà°¿à°‚à°šà±",
+    readDetailedSchedule: "à°®à°¿à°—à°¿à°²à°¿à°¨ à°®à°‚à°¦à±à°² à°µà°¿à°µà°°à°¾à°²à± à°µà°¿à°¨à°‚à°¡à°¿",
+    taken: "à°µà±‡à°¸à±à°•à±à°¨à±à°¨à°¾à°°à±",
+    skip: "à°µà°¦à°¿à°²à±‡à°¶à°¾à°°à±",
+    pending: "à°°à°¾à°¬à±‹à°¯à±‡à°µà°¿",
+    hearInstruction: "à°¸à±‚à°šà°¨ à°µà°¿à°¨à°‚à°¡à°¿",
+    prevDay: "à°¨à°¿à°¨à±à°¨à°Ÿà°¿ à°°à±‹à°œà±",
+    today: "à°ˆà°°à±‹à°œà±",
+    tomorrow: "à°°à±‡à°ªà±",
+    selectDate: "à°¤à±‡à°¦à±€ à°Žà°‚à°šà±à°•à±‹à°‚à°¡à°¿:"
   }
 };
 
@@ -308,16 +308,16 @@ function updateCurrentDateDisplay() {
       badgeEl.innerText = "Today";
       badgeEl.className = "text-[10px] bg-sky-50 text-sky-700 border border-sky-200 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider";
     } else if (state.selectedDate === tomorrowStr) {
-      badgeEl.innerText = "🔮 Tomorrow Preview";
+      badgeEl.innerText = "ðŸ”® Tomorrow Preview";
       badgeEl.className = "text-[10px] bg-purple-50 text-purple-700 border border-purple-200 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider";
     } else if (state.selectedDate === yesterdayStr) {
-      badgeEl.innerText = "⏮️ Yesterday History";
+      badgeEl.innerText = "â®ï¸ Yesterday History";
       badgeEl.className = "text-[10px] bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider";
     } else if (state.selectedDate < todayStr) {
-      badgeEl.innerText = "📜 Past History Log";
+      badgeEl.innerText = "ðŸ“œ Past History Log";
       badgeEl.className = "text-[10px] bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider";
     } else {
-      badgeEl.innerText = "🔮 Future Schedule Preview";
+      badgeEl.innerText = "ðŸ”® Future Schedule Preview";
       badgeEl.className = "text-[10px] bg-purple-50 text-purple-700 border border-purple-200 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider";
     }
   }
@@ -378,7 +378,7 @@ function handleAuthSubmit(e) {
     registeredUsersDB[email] = { email, password, name, role };
     saveUsersDBToLocalStorage();
     state.currentUser = { loggedIn: true, email, name, role };
-    showToast(`🎉 Welcome to DoseBuddy, ${name}! Account Created.`, "success");
+    showToast(`ðŸŽ‰ Welcome to DoseBuddy, ${name}! Account Created.`, "success");
   } else {
     const existing = registeredUsersDB[email];
     if (existing && existing.password === password) {
@@ -428,18 +428,18 @@ function renderHeaderAuthBadge() {
   if (!container) return;
 
   if (state.currentUser.loggedIn) {
-    const roleBadge = state.currentUser.role === "caregiver" ? "👨‍⚕️ Admin / Caregiver" : "👴 Patient";
+    const roleBadge = state.currentUser.role === "caregiver" ? "ðŸ‘¨â€âš•ï¸ Admin / Caregiver" : "ðŸ‘´ Patient";
     container.innerHTML = `
       <div class="flex items-center gap-2 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-xl text-xs shadow-sm">
         <span class="font-bold text-slate-800">${state.currentUser.name}</span>
         <span class="text-[10px] bg-sky-50 text-sky-700 border border-sky-200 px-2 py-0.5 rounded-full font-bold">${roleBadge}</span>
-        <button onclick="logoutUser()" class="text-rose-500 hover:text-rose-700 font-bold ml-1" title="Logout">🚪</button>
+        <button onclick="logoutUser()" class="text-rose-500 hover:text-rose-700 font-bold ml-1" title="Logout">ðŸšª</button>
       </div>
     `;
   } else {
     container.innerHTML = `
       <button id="login-trigger-btn" onclick="openAuthModal()" class="px-3.5 py-1.5 bg-sky-50 hover:bg-sky-100 border border-sky-200 rounded-xl text-xs font-bold text-sky-700 flex items-center gap-1.5 transition-all shadow-sm">
-        <span>👤</span>
+        <span>ðŸ‘¤</span>
         <span id="user-badge-text">Sign In / Register</span>
       </button>
     `;
@@ -578,9 +578,9 @@ function renderScheduleBlocks() {
 
       if (isPastDate) {
         if (item.status === "taken") {
-          statusMarkup = `<span class="text-xs font-bold bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-xl border border-emerald-200">✓ Taken in Past</span>`;
+          statusMarkup = `<span class="text-xs font-bold bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-xl border border-emerald-200">âœ“ Taken in Past</span>`;
         } else if (item.status === "skipped") {
-          statusMarkup = `<span class="text-xs font-bold bg-rose-50 text-rose-700 px-3 py-1.5 rounded-xl border border-rose-200">✕ Skipped</span>`;
+          statusMarkup = `<span class="text-xs font-bold bg-rose-50 text-rose-700 px-3 py-1.5 rounded-xl border border-rose-200">âœ• Skipped</span>`;
         } else {
           statusMarkup = `<span class="text-xs font-bold bg-slate-100 text-slate-500 px-3 py-1.5 rounded-xl border border-slate-200">Not Logged</span>`;
         }
@@ -589,14 +589,14 @@ function renderScheduleBlocks() {
         statusMarkup = `<span class="text-xs font-bold bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-xl border border-emerald-200">Scheduled for ${formattedDate}</span>`;
       } else {
         if (item.status === "taken") {
-          statusMarkup = `<div class="flex items-center gap-1.5 text-xs font-bold bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-xl border border-emerald-200"><span>✓</span> ${dict.taken}</div>`;
+          statusMarkup = `<div class="flex items-center gap-1.5 text-xs font-bold bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-xl border border-emerald-200"><span>âœ“</span> ${dict.taken}</div>`;
         } else if (item.status === "skipped") {
-          statusMarkup = `<div class="flex items-center gap-1.5 text-xs font-bold bg-rose-50 text-rose-700 px-3 py-1.5 rounded-xl border border-rose-200"><span>✕</span> ${dict.skip}</div>`;
+          statusMarkup = `<div class="flex items-center gap-1.5 text-xs font-bold bg-rose-50 text-rose-700 px-3 py-1.5 rounded-xl border border-rose-200"><span>âœ•</span> ${dict.skip}</div>`;
         } else {
           statusMarkup = `
             <div class="flex items-center gap-2">
               <button onclick="markDoseStatus('${item.doseId}', 'taken')" class="px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold text-xs rounded-xl transition-all shadow-md shadow-emerald-500/20 active:scale-95 flex items-center gap-1">
-                <span>✓</span> ${dict.taken}
+                <span>âœ“</span> ${dict.taken}
               </button>
               <button onclick="markDoseStatus('${item.doseId}', 'skipped')" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-xs rounded-xl border border-slate-200 transition-all active:scale-95 shadow-sm">
                 ${dict.skip}
@@ -618,7 +618,7 @@ function renderScheduleBlocks() {
           <div class="flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-100 pt-2">
             <span>Time: <strong class="text-slate-600">${item.time}</strong></span>
             <button onclick="speakDoseInstruction('${item.name}', '${item.dose}', '${item.instructions}')" class="text-sky-600 hover:underline flex items-center gap-1 font-semibold">
-              <span>🔊</span> <span>${dict.hearInstruction || 'Hear Instruction'}</span>
+              <span>ðŸ”Š</span> <span>${dict.hearInstruction || 'Hear Instruction'}</span>
             </button>
           </div>
         </div>
@@ -677,7 +677,7 @@ function renderAdherenceStats() {
   const subtitleEl = document.getElementById("today-summary-subtitle");
   if (subtitleEl) {
     const dateLabel = state.selectedDate === getTodayDateString() ? "today" : `on ${state.selectedDate}`;
-    subtitleEl.innerText = `${total - (takenCount + skippedCount)} remaining ${dateLabel} • ${skippedCount} skipped`;
+    subtitleEl.innerText = `${total - (takenCount + skippedCount)} remaining ${dateLabel} â€¢ ${skippedCount} skipped`;
   }
 }
 
@@ -688,7 +688,7 @@ function renderPrescriptionsTable() {
   if (state.medications.length === 0) {
     container.innerHTML = `
       <div class="text-center py-8 text-slate-400 space-y-2">
-        <span class="text-3xl">💊</span>
+        <span class="text-3xl">ðŸ’Š</span>
         <div class="text-sm font-semibold">No active saved prescriptions yet.</div>
         <div class="text-xs">Click "Scan & Add Rx" or "Add Medicine Manually" to add medications.</div>
       </div>
@@ -717,7 +717,7 @@ function renderPrescriptionsTable() {
             <td class="p-3 font-bold ${med.stock <= 5 ? 'text-rose-600' : 'text-emerald-700'}">${med.stock || 0} pills</td>
             <td class="p-3 text-slate-500">${med.instructions || 'None'}</td>
             <td class="p-3 text-right space-x-2">
-              <button onclick="addMedToGoogleCalendar('${med.id}')" class="text-sky-700 hover:underline font-bold">🗓️ Sync</button>
+              <button onclick="addMedToGoogleCalendar('${med.id}')" class="text-sky-700 hover:underline font-bold">ðŸ—“ï¸ Sync</button>
               <button onclick="editMedication('${med.id}')" class="text-indigo-700 hover:underline font-bold">Edit</button>
               <button onclick="deleteMedication('${med.id}')" class="text-rose-600 hover:underline font-bold">Delete</button>
             </td>
@@ -777,7 +777,7 @@ function renderGoogleCalendarSyncSection() {
         <div class="text-xs text-slate-500 mt-0.5">Frequency: <span class="text-sky-700 font-mono font-bold">${med.freq}</span></div>
       </div>
       <button onclick="addMedToGoogleCalendar('${med.id}')" class="px-3 py-1.5 bg-gradient-to-r from-sky-600 to-teal-600 hover:from-sky-700 hover:to-teal-700 text-white font-bold text-xs rounded-xl shadow-md shadow-sky-500/20 transition-all flex items-center gap-1.5">
-        <span>➕</span> <span>Add to GCal</span>
+        <span>âž•</span> <span>Add to GCal</span>
       </button>
     </div>
   `).join("");
@@ -787,7 +787,7 @@ function addMedToGoogleCalendar(medId) {
   const med = state.medications.find(m => m.id === medId);
   if (!med) return;
 
-  const title = encodeURIComponent(`💊 Take ${med.name} ${med.dose}`);
+  const title = encodeURIComponent(`ðŸ’Š Take ${med.name} ${med.dose}`);
   const details = encodeURIComponent(`DoseBuddy Prescription Reminder:\nMedicine: ${med.name} ${med.dose}\nTiming Pattern: ${med.freq}\nInstructions: ${med.instructions || 'Take with water'}`);
   const location = encodeURIComponent(`Home`);
 
@@ -802,7 +802,7 @@ function addMedToGoogleCalendar(medId) {
   const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${startIso}/${endIso}&recur=RRULE:FREQ=DAILY`;
 
   window.open(gcalUrl, "_blank");
-  showToast(`🗓️ Opening Google Calendar event for ${med.name}...`, "success");
+  showToast(`ðŸ—“ï¸ Opening Google Calendar event for ${med.name}...`, "success");
 }
 
 function openGoogleCalendarWeb() {
@@ -818,7 +818,7 @@ function downloadICSFile() {
   let icsContent = `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//DoseBuddy//Prescription Reminders//EN\r\nCALSCALE:GREGORIAN\r\n`;
 
   state.medications.forEach(med => {
-    const title = `💊 Take ${med.name} ${med.dose}`;
+    const title = `ðŸ’Š Take ${med.name} ${med.dose}`;
     const desc = `DoseBuddy Reminder: ${med.instructions || 'Take as prescribed'}. Timing pattern: ${med.freq}`;
 
     const now = new Date();
@@ -848,7 +848,7 @@ function downloadICSFile() {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 
-  showToast("📥 Exported DoseBuddy_Medication_Reminders.ics file!", "success");
+  showToast("ðŸ“¥ Exported DoseBuddy_Medication_Reminders.ics file!", "success");
 }
 
 
@@ -868,7 +868,7 @@ function renderRefillListSection() {
         <div class="font-extrabold text-slate-800 text-base">${med.name} (${med.dose})</div>
         <div class="text-xs ${med.stock <= 5 ? 'text-rose-600 font-bold' : 'text-slate-500'} mt-1">
           Stock remaining: <span class="text-slate-800 font-extrabold">${med.stock || 0} pills</span>
-          ${med.stock <= 5 ? ' ⚠️ Low Stock Alert!' : ''}
+          ${med.stock <= 5 ? ' âš ï¸ Low Stock Alert!' : ''}
         </div>
       </div>
       <button onclick="adjustPillStock('${med.id}', 10)" class="px-3.5 py-2 bg-gradient-to-r from-sky-600 to-teal-600 hover:from-sky-700 hover:to-teal-700 text-white font-bold text-xs rounded-xl shadow-md shadow-sky-500/20 transition-all">
@@ -905,7 +905,7 @@ function checkBackendOCRStatus() {
       if (data && data.status === "healthy") {
         backendOCRAvailable = true;
         if (badge) {
-          badge.innerText = data.gemini_configured ? "🟢 Gemini AI Cloud Ready" : "🟢 Backend Server Connected";
+          badge.innerText = data.gemini_configured ? "ðŸŸ¢ Gemini AI Cloud Ready" : "ðŸŸ¢ Backend Server Connected";
           badge.className = "text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider";
         }
       }
@@ -913,7 +913,7 @@ function checkBackendOCRStatus() {
     .catch(() => {
       backendOCRAvailable = false;
       if (badge) {
-        badge.innerText = "⚡ Browser Tesseract OCR Ready";
+        badge.innerText = "âš¡ Browser Tesseract OCR Ready";
         badge.className = "text-[10px] bg-[#f0f6f2] text-[#335542] border border-[#d2e4d8] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider";
       }
     });
@@ -943,7 +943,7 @@ function setupClipboardPaste() {
           if (blob) {
             handleFile(blob);
             switchTab("tab-scan");
-            showToast("📋 Image pasted from clipboard!", "success");
+            showToast("ðŸ“‹ Image pasted from clipboard!", "success");
             break;
           }
         }
@@ -1076,7 +1076,7 @@ function captureCameraSnapshot() {
       const file = new File([blob], `prescription_cam_${Date.now()}.jpg`, { type: "image/jpeg" });
       handleFile(file);
       closeCameraModal();
-      showToast("📸 Prescription photo captured!", "success");
+      showToast("ðŸ“¸ Prescription photo captured!", "success");
     }
   }, "image/jpeg", 0.95);
 }
@@ -1253,14 +1253,14 @@ function normalizeFrequencyPattern(str) {
   const s = str.toString().toLowerCase().trim();
 
   // Handle digit patterns like 1-0-1, 1 0 1, 1:0:1, 1/0/1, 1-1-1, 0-0-1, 1-0-0
-  const match = s.match(/([0-2])\s*[-–—/:,.\s]\s*([0-2])\s*[-–—/:,.\s]\s*([0-2])/);
+  const match = s.match(/([0-2])\s*[-â€“â€”/:,.\s]\s*([0-2])\s*[-â€“â€”/:,.\s]\s*([0-2])/);
   if (match) {
     return `${match[1]}-${match[2]}-${match[3]}`;
   }
 
   // Handle OCR letter confusions like l-0-l, O-0-1, I-I-I
   const cleaned = s.replace(/l|i/gi, "1").replace(/o/gi, "0");
-  const match2 = cleaned.match(/([0-2])\s*[-–—/:,.\s]\s*([0-2])\s*[-–—/:,.\s]\s*([0-2])/);
+  const match2 = cleaned.match(/([0-2])\s*[-â€“â€”/:,.\s]\s*([0-2])\s*[-â€“â€”/:,.\s]\s*([0-2])/);
   if (match2) {
     return `${match2[1]}-${match2[2]}-${match2[3]}`;
   }
@@ -1290,136 +1290,126 @@ function parseExtractedTextAndPromptConfirm(rawText) {
   const detectedMeds = [];
   const addedDrugNames = new Set();
 
-  // Step 1: Line-by-line parsing for multi-medicine slips
+  // ---- PASS 1: Line-by-line scanning ----
   for (const line of lines) {
     const lineLower = line.toLowerCase();
 
-    // Skip doctor titles, clinic banners, metadata, patient headers
+    // Skip non-medicine lines (headers, clinic info, patient metadata)
     if (
-      lineLower.startsWith("dr.") ||
-      lineLower.startsWith("dr ") ||
-      lineLower.includes("clinic") ||
-      lineLower.includes("hospital") ||
-      lineLower.includes("phone:") ||
-      lineLower.includes("tel:") ||
-      lineLower.includes("address:") ||
-      lineLower.includes("patient name") ||
-      lineLower.includes("signature") ||
-      lineLower.includes("date:") ||
-      lineLower.includes("m.b.b.s") ||
-      lineLower.includes("m.d.")
-    ) {
-      continue;
-    }
+      lineLower.startsWith("dr.") || lineLower.startsWith("dr ") ||
+      lineLower.includes("clinic") || lineLower.includes("hospital") ||
+      lineLower.includes("phone:") || lineLower.includes("tel:") ||
+      lineLower.includes("address:") || lineLower.includes("patient name") ||
+      lineLower.includes("signature") || lineLower.includes("date:") ||
+      lineLower.includes("m.b.b.s") || lineLower.includes("m.d.") ||
+      /^(name|age|gender|weight|diagnosis|reg\.?\s*no)[:\s]/i.test(lineLower)
+    ) { continue; }
 
     let foundDrug = null;
     for (const drug of MEDICAL_DRUG_DICTIONARY) {
       const matchDrug = drug.name.toLowerCase();
       const matchAliases = drug.aliases || [];
-      if (
-        lineLower.includes(matchDrug) ||
-        matchAliases.some(alias => lineLower.includes(alias.toLowerCase()))
-      ) {
+      if (lineLower.includes(matchDrug) || matchAliases.some(alias => lineLower.includes(alias.toLowerCase()))) {
         foundDrug = drug;
         break;
       }
     }
 
-    // Extract dosage specific to this line
-    const doseMatch = line.match(/\b(\d+(?:\.\d+)?\s*(?:mg|mcg|g|ml|iu|tablets?|caps?|capsules?|pills?))\b/i);
+    // Extract dose from this line + next line combined (freq may be on next line)
+    const lineIdx = lines.indexOf(line);
+    const nextLine = lines[lineIdx + 1] || "";
+    const freqCtx = line + " " + nextLine;
+    const doseMatch = freqCtx.match(/\b(\d+(?:\.\d+)?\s*(?:mg|mcg|g|ml|iu|tablets?|caps?|capsules?|pills?))\b/i);
     const lineDose = doseMatch ? doseMatch[1].trim() : (foundDrug ? foundDrug.defaultDose : "500 mg");
+    const lineFreq = normalizeFrequencyPattern(freqCtx);
 
-    // Extract frequency specific to this line
-    const lineFreq = normalizeFrequencyPattern(line);
-
-    // Extract instructions
+    // Extract instructions from context
     let lineInstructions = foundDrug ? foundDrug.instructions : "Take as directed by physician";
-    if (lineLower.includes("after food") || lineLower.includes("after meals") || lineLower.includes("pc")) {
-      lineInstructions = "Take after meals with water";
-    } else if (lineLower.includes("before food") || lineLower.includes("before meals") || lineLower.includes("empty stomach") || lineLower.includes("ac")) {
-      lineInstructions = "Take on an empty stomach before food";
-    } else if (lineLower.includes("bedtime") || lineLower.includes("at night")) {
-      lineInstructions = "Take at bedtime with water";
-    } else if (lineLower.includes("for fever") || lineLower.includes("for pain") || lineLower.includes("sos") || lineLower.includes("prn")) {
-      lineInstructions = "Take as needed for fever or pain";
-    }
+    const ctx = freqCtx.toLowerCase();
+    if (ctx.includes("after food") || ctx.includes("after meals") || ctx.includes(" pc ")) lineInstructions = "Take after meals with water";
+    else if (ctx.includes("before food") || ctx.includes("before meals") || ctx.includes("empty stomach") || ctx.includes(" ac ")) lineInstructions = "Take on an empty stomach before food";
+    else if (ctx.includes("bedtime") || ctx.includes("at night") || ctx.includes(" hs ")) lineInstructions = "Take at bedtime with water";
+    else if (ctx.includes("sos") || ctx.includes("prn") || ctx.includes("for fever") || ctx.includes("for pain")) lineInstructions = "Take as needed for fever or pain";
 
     if (foundDrug) {
       if (!addedDrugNames.has(foundDrug.name.toLowerCase())) {
         addedDrugNames.add(foundDrug.name.toLowerCase());
-        detectedMeds.push({
-          name: foundDrug.name,
-          dose: lineDose,
-          freq: lineFreq,
-          stock: 30,
-          instructions: lineInstructions
-        });
+        detectedMeds.push({ name: foundDrug.name, dose: lineDose, freq: lineFreq, stock: 30, instructions: lineInstructions });
       }
     } else {
-      // Check if line looks like an Rx item (e.g. "1. Tab Azithral 500mg 1-0-0" or "Augmentin 625mg")
+      // Unknown drug — check if line looks like Rx item (Tab./Cap. prefix or has dose/freq pattern)
       const isRxLine =
-        /^(?:\d+[\.\)]\s*)?(?:rx:?\s*|tab\.?\s*|cap\.?\s*|syp\.?\s*|t\.?\s*|c\.?\s*)/i.test(line) ||
+        /^(?:\d+[\.\)]\s*)?(?:rx:?\s*|tab\.?\s*|cap\.?\s*|syp\.?\s*|inj\.?\s*|t\.?\s*|c\.?\s*)/i.test(line) ||
         doseMatch !== null ||
         /\b[0-2]-[0-2]-[0-2]\b/.test(line);
 
       if (isRxLine) {
-        // Strip out leading numbers, prefixes
         let cleanName = line
-          .replace(/^(?:\d+[\.\)]\s*)?(?:rx:?\s*|tab\.?\s*|cap\.?\s*|syp\.?\s*|t\.?\s*|c\.?\s*)/i, "")
+          .replace(/^(?:\d+[\.\)]\s*)?(?:rx:?\s*|tab\.?\s*|cap\.?\s*|syp\.?\s*|inj\.?\s*|t\.?\s*|c\.?\s*)/i, "")
           .trim();
-
-        // Split off before dose or frequency
         cleanName = cleanName.split(/\b\d+(?:\.\d+)?\s*(?:mg|mcg|g|ml|iu|tab|cap)/i)[0].trim();
-        cleanName = cleanName.split(/[-–—(]/)[0].trim();
+        cleanName = cleanName.split(/[-\u2013\u2014(]/)[0].trim();
 
         if (cleanName.length >= 3 && cleanName.length <= 40 && !cleanName.toLowerCase().includes("signature")) {
           const capitalized = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
           if (!addedDrugNames.has(capitalized.toLowerCase())) {
             addedDrugNames.add(capitalized.toLowerCase());
-            detectedMeds.push({
-              name: capitalized,
-              dose: lineDose,
-              freq: lineFreq,
-              stock: 30,
-              instructions: lineInstructions
-            });
+            detectedMeds.push({ name: capitalized, dose: lineDose, freq: lineFreq, stock: 30, instructions: lineInstructions });
           }
         }
       }
     }
   }
 
-  // Step 2: Global Fallback scan if line parser yielded 0
+  // ---- PASS 2: Word-level scan — catches medicines mid-line or in collapsed OCR blobs ----
+  if (detectedMeds.length < 2) {
+    const fullLower = rawClean.toLowerCase();
+    for (const drug of MEDICAL_DRUG_DICTIONARY) {
+      if (addedDrugNames.has(drug.name.toLowerCase())) continue;
+
+      const matchDrug = drug.name.toLowerCase();
+      const matchAliases = drug.aliases || [];
+      let foundPos = fullLower.indexOf(matchDrug);
+      if (foundPos === -1) {
+        for (const alias of matchAliases) {
+          const idx = fullLower.indexOf(alias.toLowerCase());
+          if (idx !== -1) { foundPos = idx; break; }
+        }
+      }
+
+      if (foundPos !== -1) {
+        const snippet = rawClean.substring(Math.max(0, foundPos - 15), Math.min(rawClean.length, foundPos + 80));
+        const dm = snippet.match(/\b(\d+(?:\.\d+)?\s*(?:mg|mcg|g|ml|iu|tablets?|caps?|pills?))\b/i);
+        const d = dm ? dm[1].trim() : drug.defaultDose;
+        const f = normalizeFrequencyPattern(snippet);
+        const sLow = snippet.toLowerCase();
+        let ins = drug.instructions;
+        if (sLow.includes("after food") || sLow.includes("after meals")) ins = "Take after meals with water";
+        else if (sLow.includes("before food") || sLow.includes("empty stomach")) ins = "Take on an empty stomach before food";
+        else if (sLow.includes("bedtime") || sLow.includes("at night")) ins = "Take at bedtime with water";
+
+        addedDrugNames.add(drug.name.toLowerCase());
+        detectedMeds.push({ name: drug.name, dose: d, freq: f, stock: 30, instructions: ins });
+      }
+    }
+  }
+
+  // ---- PASS 3: Global dictionary scan (final fallback when 0 results) ----
   if (detectedMeds.length === 0) {
     const fullLower = rawText.toLowerCase();
     for (const drug of MEDICAL_DRUG_DICTIONARY) {
-      if (
-        fullLower.includes(drug.name.toLowerCase()) ||
-        (drug.aliases && drug.aliases.some(a => fullLower.includes(a.toLowerCase())))
-      ) {
+      if (fullLower.includes(drug.name.toLowerCase()) ||
+          (drug.aliases && drug.aliases.some(a => fullLower.includes(a.toLowerCase())))) {
         if (!addedDrugNames.has(drug.name.toLowerCase())) {
           addedDrugNames.add(drug.name.toLowerCase());
-          detectedMeds.push({
-            name: drug.name,
-            dose: drug.defaultDose,
-            freq: normalizeFrequencyPattern(rawText),
-            stock: 30,
-            instructions: drug.instructions
-          });
+          detectedMeds.push({ name: drug.name, dose: drug.defaultDose, freq: normalizeFrequencyPattern(rawText), stock: 30, instructions: drug.instructions });
         }
       }
     }
   }
 
-  // If still empty, supply clean fallback
   if (detectedMeds.length === 0) {
-    detectedMeds.push({
-      name: "Prescribed Medication",
-      dose: "500 mg",
-      freq: "1-0-1",
-      stock: 30,
-      instructions: "Take as directed by doctor"
-    });
+    detectedMeds.push({ name: "Prescribed Medication", dose: "500 mg", freq: "1-0-1", stock: 30, instructions: "Take as directed by doctor" });
   }
 
   renderBatchConfirmModal(detectedMeds);
@@ -1479,7 +1469,7 @@ function renderBatchConfirmModal(medsList, editingId = null) {
         </div>
         ${items.length > 1 ? `
           <button onclick="removeMedRowFromModal(this)" class="text-rose-500 hover:text-rose-700 text-xs font-bold px-2 py-1 rounded-lg hover:bg-rose-50 transition-colors flex items-center gap-1">
-            <span>🗑️</span> <span>Remove</span>
+            <span>ðŸ—‘ï¸</span> <span>Remove</span>
           </button>
         ` : ''}
       </div>
@@ -1541,7 +1531,7 @@ function addNewBlankMedRowToModal() {
         <span class="font-bold text-xs text-[#1b2620] uppercase tracking-wider">Additional Medication</span>
       </div>
       <button onclick="removeMedRowFromModal(this)" class="text-rose-500 hover:text-rose-700 text-xs font-bold px-2 py-1 rounded-lg hover:bg-rose-50 transition-colors flex items-center gap-1">
-        <span>🗑️</span> <span>Remove</span>
+        <span>ðŸ—‘ï¸</span> <span>Remove</span>
       </button>
     </div>
 
@@ -1633,7 +1623,7 @@ function checkModalBatchDrugInteractions() {
   });
 
   if (detectedConflicts.length > 0) {
-    alertText.innerText = detectedConflicts.join(" • ");
+    alertText.innerText = detectedConflicts.join(" â€¢ ");
     alertBox.classList.remove("hidden");
   } else {
     alertBox.classList.add("hidden");
@@ -1692,7 +1682,7 @@ function saveAllConfirmedMedications() {
 
   if (newMedsToAdd.length > 0) {
     state.medications.push(...newMedsToAdd);
-    showToast(`🎉 Scheduled ${newMedsToAdd.length} medication${newMedsToAdd.length !== 1 ? 's' : ''} into your daily routine!`, "success");
+    showToast(`ðŸŽ‰ Scheduled ${newMedsToAdd.length} medication${newMedsToAdd.length !== 1 ? 's' : ''} into your daily routine!`, "success");
   } else if (editingId) {
     showToast(`Updated medication details`, "success");
   }
@@ -1744,13 +1734,38 @@ function selectSampleRx(rxId) {
   const rx = SAMPLE_PRESCRIPTIONS.find(r => r.id === rxId);
   if (!rx) return;
 
+  // Show the canvas image as a preview in the scan tab
   const dataUrl = createPrescriptionCanvasImage(rx);
   const previewImg = document.getElementById("prescription-preview-img");
   previewImg.src = dataUrl;
+  previewImg.dataset.sampleRxId = rxId; // tag for direct-data path
 
   switchTab("tab-scan");
   document.getElementById("image-preview-container").classList.remove("hidden");
-  document.getElementById("process-ocr-btn").disabled = false;
+
+  // ---- DIRECT DATA PATH (skips lossy OCR) ----
+  // If the sample Rx has a structured medicines array, use it directly
+  // instead of running Tesseract on the canvas image â€” which routinely
+  // drops medicine lines because synthetic canvas fonts confuse OCR.
+  if (rx.medicines && rx.medicines.length > 0) {
+    const progressBox = document.getElementById("ocr-progress-box");
+    const progressBar = document.getElementById("ocr-progress-bar");
+    const statusText = document.getElementById("ocr-status-text");
+    const percentageText = document.getElementById("ocr-percentage-text");
+
+    progressBox.classList.remove("hidden");
+    progressBar.style.width = "100%";
+    percentageText.innerText = "100%";
+    statusText.innerText = `âœ… Sample Rx loaded â€” ${rx.medicines.length} medicines ready for review`;
+
+    setTimeout(() => {
+      renderBatchConfirmModal(rx.medicines);
+      showToast(`ðŸ“‹ ${rx.medicines.length} medicines loaded from sample prescription`, "success");
+    }, 400);
+  } else {
+    // Fallback: enable manual OCR button if no structured data
+    document.getElementById("process-ocr-btn").disabled = false;
+  }
 }
 
 
@@ -1777,7 +1792,7 @@ function renderCaregiverBox() {
 function checkCaregiverSkippedTrigger(medName) {
   if (state.caregiver.name || state.caregiver.email || state.caregiver.phone) {
     const contact = state.caregiver.email || state.caregiver.phone || state.caregiver.name;
-    showToast(`📱 Caregiver Alert Dispatched to ${contact}: Dose skipped (${medName})`, "warning");
+    showToast(`ðŸ“± Caregiver Alert Dispatched to ${contact}: Dose skipped (${medName})`, "warning");
   }
 }
 
@@ -1800,7 +1815,7 @@ function renderInteractionAlerts() {
   if (conflicts.length > 0) {
     statusEl.innerHTML = conflicts.map(c => `
       <div class="text-xs text-rose-300 font-bold mt-1 flex items-start gap-1">
-        <span>⚠️</span> <span>[${c.severity} Severity] ${c.message}</span>
+        <span>âš ï¸</span> <span>[${c.severity} Severity] ${c.message}</span>
       </div>
     `).join("");
   } else {
@@ -1868,17 +1883,17 @@ function speakDoseInstruction(medName, dose, instructions) {
   let speechText = "";
 
   if (lang === "te") {
-    const instText = instructions ? `సూచనలు: ${instructions}` : "సూచనల ప్రకారం వేసుకోండి.";
-    speechText = `ఇప్పుడు ${medName} ${dose} వేసుకోవాల్సిన సమయం అయింది. ${instText}`;
-    showToast(`🔊 [తెలుగు వాయిస్]: "${speechText}"`, "info");
+    const instText = instructions ? `à°¸à±‚à°šà°¨à°²à±: ${instructions}` : "à°¸à±‚à°šà°¨à°² à°ªà±à°°à°•à°¾à°°à°‚ à°µà±‡à°¸à±à°•à±‹à°‚à°¡à°¿.";
+    speechText = `à°‡à°ªà±à°ªà±à°¡à± ${medName} ${dose} à°µà±‡à°¸à±à°•à±‹à°µà°¾à°²à±à°¸à°¿à°¨ à°¸à°®à°¯à°‚ à°…à°¯à°¿à°‚à°¦à°¿. ${instText}`;
+    showToast(`ðŸ”Š [à°¤à±†à°²à±à°—à± à°µà°¾à°¯à°¿à°¸à±]: "${speechText}"`, "info");
   } else if (lang === "hi") {
-    const instText = instructions ? `निर्देश: ${instructions}` : "निर्देशानुसार लें।";
-    speechText = `अब ${medName} ${dose} लेने का समय हो गया है। ${instText}`;
-    showToast(`🔊 [हिंदी आवाज़]: "${speechText}"`, "info");
+    const instText = instructions ? `à¤¨à¤¿à¤°à¥à¤¦à¥‡à¤¶: ${instructions}` : "à¤¨à¤¿à¤°à¥à¤¦à¥‡à¤¶à¤¾à¤¨à¥à¤¸à¤¾à¤° à¤²à¥‡à¤‚à¥¤";
+    speechText = `à¤…à¤¬ ${medName} ${dose} à¤²à¥‡à¤¨à¥‡ à¤•à¤¾ à¤¸à¤®à¤¯ à¤¹à¥‹ à¤—à¤¯à¤¾ à¤¹à¥ˆà¥¤ ${instText}`;
+    showToast(`ðŸ”Š [à¤¹à¤¿à¤‚à¤¦à¥€ à¤†à¤µà¤¾à¤œà¤¼]: "${speechText}"`, "info");
   } else {
     const instText = instructions ? `Instructions: ${instructions}` : "Take as directed.";
     speechText = `Time to take ${medName} ${dose}. ${instText}`;
-    showToast(`🔊 [English Voice]: "${speechText}"`, "info");
+    showToast(`ðŸ”Š [English Voice]: "${speechText}"`, "info");
   }
 
   speakText(speechText, lang);
@@ -1896,30 +1911,30 @@ function triggerDetailedScheduleAudioSummary() {
   let text = "";
 
   if (pending.length === 0) {
-    if (lang === "te") text = "అద్భుతం! ఈరోజు వేసుకోవాల్సిన అన్ని మందులు వేసుకున్నారు.";
-    else if (lang === "hi") text = "बहुत बढ़िया! आज की सभी निर्धारित खुराकें ले ली गई हैं।";
+    if (lang === "te") text = "à°…à°¦à±à°­à±à°¤à°‚! à°ˆà°°à±‹à°œà± à°µà±‡à°¸à±à°•à±‹à°µà°¾à°²à±à°¸à°¿à°¨ à°…à°¨à±à°¨à°¿ à°®à°‚à°¦à±à°²à± à°µà±‡à°¸à±à°•à±à°¨à±à°¨à°¾à°°à±.";
+    else if (lang === "hi") text = "à¤¬à¤¹à¥à¤¤ à¤¬à¤¢à¤¼à¤¿à¤¯à¤¾! à¤†à¤œ à¤•à¥€ à¤¸à¤­à¥€ à¤¨à¤¿à¤°à¥à¤§à¤¾à¤°à¤¿à¤¤ à¤–à¥à¤°à¤¾à¤•à¥‡à¤‚ à¤²à¥‡ à¤²à¥€ à¤—à¤ˆ à¤¹à¥ˆà¤‚à¥¤";
     else text = "Great job! All scheduled doses for today have been taken.";
   } else {
     if (lang === "te") {
-      text = "ఈరోజు మీకు మిగిలిన మందుల వివరాలు: ";
-      if (morningMeds.length > 0) text += `ఉదయం వేసుకోవాల్సినవి: ${morningMeds.join(", ")}. `;
-      else text += "ఉదయం మందులు ఏమీ లేవు. ";
+      text = "à°ˆà°°à±‹à°œà± à°®à±€à°•à± à°®à°¿à°—à°¿à°²à°¿à°¨ à°®à°‚à°¦à±à°² à°µà°¿à°µà°°à°¾à°²à±: ";
+      if (morningMeds.length > 0) text += `à°‰à°¦à°¯à°‚ à°µà±‡à°¸à±à°•à±‹à°µà°¾à°²à±à°¸à°¿à°¨à°µà°¿: ${morningMeds.join(", ")}. `;
+      else text += "à°‰à°¦à°¯à°‚ à°®à°‚à°¦à±à°²à± à°à°®à±€ à°²à±‡à°µà±. ";
 
-      if (afternoonMeds.length > 0) text += `మధ్యాహ్నం వేసుకోవాల్సినవి: ${afternoonMeds.join(", ")}. `;
-      else text += "మధ్యాహ్నం మందులు ఏమీ లేవు. ";
+      if (afternoonMeds.length > 0) text += `à°®à°§à±à°¯à°¾à°¹à±à°¨à°‚ à°µà±‡à°¸à±à°•à±‹à°µà°¾à°²à±à°¸à°¿à°¨à°µà°¿: ${afternoonMeds.join(", ")}. `;
+      else text += "à°®à°§à±à°¯à°¾à°¹à±à°¨à°‚ à°®à°‚à°¦à±à°²à± à°à°®à±€ à°²à±‡à°µà±. ";
 
-      if (nightMeds.length > 0) text += `రాత్రి వేసుకోవాల్సినవి: ${nightMeds.join(", ")}.`;
-      else text += "రాత్రి మందులు ఏమీ లేవు.";
+      if (nightMeds.length > 0) text += `à°°à°¾à°¤à±à°°à°¿ à°µà±‡à°¸à±à°•à±‹à°µà°¾à°²à±à°¸à°¿à°¨à°µà°¿: ${nightMeds.join(", ")}.`;
+      else text += "à°°à°¾à°¤à±à°°à°¿ à°®à°‚à°¦à±à°²à± à°à°®à±€ à°²à±‡à°µà±.";
     } else if (lang === "hi") {
-      text = "आपकी आज की शेष दवाओं का विवरण: ";
-      if (morningMeds.length > 0) text += `सुबह बची दवाएं: ${morningMeds.join(", ")}। `;
-      else text += "सुबह की कोई दवा नहीं बची है। ";
+      text = "à¤†à¤ªà¤•à¥€ à¤†à¤œ à¤•à¥€ à¤¶à¥‡à¤· à¤¦à¤µà¤¾à¤“à¤‚ à¤•à¤¾ à¤µà¤¿à¤µà¤°à¤£: ";
+      if (morningMeds.length > 0) text += `à¤¸à¥à¤¬à¤¹ à¤¬à¤šà¥€ à¤¦à¤µà¤¾à¤à¤‚: ${morningMeds.join(", ")}à¥¤ `;
+      else text += "à¤¸à¥à¤¬à¤¹ à¤•à¥€ à¤•à¥‹à¤ˆ à¤¦à¤µà¤¾ à¤¨à¤¹à¥€à¤‚ à¤¬à¤šà¥€ à¤¹à¥ˆà¥¤ ";
 
-      if (afternoonMeds.length > 0) text += `दोपहर बची दवाएं: ${afternoonMeds.join(", ")}। `;
-      else text += "दोपहर की कोई दवा नहीं बची है। ";
+      if (afternoonMeds.length > 0) text += `à¤¦à¥‹à¤ªà¤¹à¤° à¤¬à¤šà¥€ à¤¦à¤µà¤¾à¤à¤‚: ${afternoonMeds.join(", ")}à¥¤ `;
+      else text += "à¤¦à¥‹à¤ªà¤¹à¤° à¤•à¥€ à¤•à¥‹à¤ˆ à¤¦à¤µà¤¾ à¤¨à¤¹à¥€à¤‚ à¤¬à¤šà¥€ à¤¹à¥ˆà¥¤ ";
 
-      if (nightMeds.length > 0) text += `रात में बची दवाएं: ${nightMeds.join(", ")}।`;
-      else text += "रात की कोई दवा नहीं बची है।";
+      if (nightMeds.length > 0) text += `à¤°à¤¾à¤¤ à¤®à¥‡à¤‚ à¤¬à¤šà¥€ à¤¦à¤µà¤¾à¤à¤‚: ${nightMeds.join(", ")}à¥¤`;
+      else text += "à¤°à¤¾à¤¤ à¤•à¥€ à¤•à¥‹à¤ˆ à¤¦à¤µà¤¾ à¤¨à¤¹à¥€à¤‚ à¤¬à¤šà¥€ à¤¹à¥ˆà¥¤";
     } else {
       text = "Here is your remaining medication breakdown. ";
       if (morningMeds.length > 0) text += `Remaining in the morning: ${morningMeds.join(", ")}. `;
@@ -1933,7 +1948,7 @@ function triggerDetailedScheduleAudioSummary() {
     }
   }
 
-  showToast(`🔊 Audio Breakdown (${lang.toUpperCase()}): "${text}"`, "info");
+  showToast(`ðŸ”Š Audio Breakdown (${lang.toUpperCase()}): "${text}"`, "info");
   speakText(text, lang);
 }
 
@@ -1947,10 +1962,10 @@ function requestNotificationPermission() {
     const label = document.getElementById("notif-btn-label");
     if (permission === "granted") {
       if (label) label.innerText = "Alerts Active";
-      showToast("🔔 Web Notifications Enabled!", "success");
+      showToast("ðŸ”” Web Notifications Enabled!", "success");
       new Notification("DoseBuddy Reminders Active", {
         body: "You will receive gentle reminder alerts for your medication times.",
-        icon: "💊"
+        icon: "ðŸ’Š"
       });
     } else {
       if (label) label.innerText = "Alerts Blocked";
@@ -1965,7 +1980,7 @@ function changeLanguage(langCode) {
   applyLanguageUI();
   updateCurrentDateDisplay();
   renderAll();
-  showToast("Language changed to " + (langCode === 'te' ? 'TELUGU 🇮🇳' : langCode === 'hi' ? 'HINDI 🇮🇳' : 'ENGLISH 🇺🇸'), "info");
+  showToast("Language changed to " + (langCode === 'te' ? 'TELUGU ðŸ‡®ðŸ‡³' : langCode === 'hi' ? 'HINDI ðŸ‡®ðŸ‡³' : 'ENGLISH ðŸ‡ºðŸ‡¸'), "info");
 }
 
 function applyLanguageUI() {
@@ -1989,7 +2004,7 @@ function toggleSeniorMode() {
   state.seniorMode = !state.seniorMode;
   if (state.seniorMode) {
     document.body.classList.add("senior-mode");
-    showToast("👓 Senior High-Contrast Mode Activated", "info");
+    showToast("ðŸ‘“ Senior High-Contrast Mode Activated", "info");
   } else {
     document.body.classList.remove("senior-mode");
     showToast("Standard Mode Activated", "info");
@@ -2009,7 +2024,7 @@ function showToast(message, type = "info") {
   toast.className = `p-4 rounded-2xl border ${bgClass} shadow-xl text-xs font-bold flex items-center justify-between gap-3 pointer-events-auto transition-all animate-fade-in`;
   toast.innerHTML = `
     <span>${message}</span>
-    <button onclick="this.parentElement.remove()" class="text-sm font-bold opacity-75 hover:opacity-100">✕</button>
+    <button onclick="this.parentElement.remove()" class="text-sm font-bold opacity-75 hover:opacity-100">âœ•</button>
   `;
 
   container.appendChild(toast);
