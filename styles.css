@@ -51,11 +51,12 @@
 }
 
 body {
-  background-color: var(--bg-main) !important;
+  background-color: #fafbfa !important;
   background-image: 
-    radial-gradient(ellipse at 5% 10%, rgba(82, 130, 102, 0.04) 0%, transparent 40%),
-    radial-gradient(ellipse at 95% 15%, rgba(56, 126, 124, 0.035) 0%, transparent 40%),
-    radial-gradient(ellipse at 50% 95%, rgba(82, 130, 102, 0.03) 0%, transparent 45%) !important;
+    radial-gradient(ellipse at 5% 10%, rgba(82, 130, 102, 0.08) 0%, transparent 40%),
+    radial-gradient(ellipse at 95% 15%, rgba(56, 126, 124, 0.07) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 95%, rgba(82, 130, 102, 0.06) 0%, transparent 45%),
+    url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2338664b' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round' opacity='0.12'%3E%3C!-- Leaf Branch --%3E%3Cpath d='M25 40 C35 20 60 20 68 38 C60 56 35 56 25 40 Z' fill='%236da482' fill-opacity='0.16' /%3E%3Cpath d='M25 40 Q46 39 68 38' stroke-width='1' /%3E%3C!-- 5-Petal Blossom --%3E%3Ccircle cx='120' cy='45' r='3' fill='%23df9e2c' fill-opacity='0.8' /%3E%3Ccircle cx='120' cy='38.5' r='4.2' fill='%23ffffff' fill-opacity='0.9' stroke='%2338664b' stroke-width='1.1' /%3E%3Ccircle cx='126' cy='42.5' r='4.2' fill='%23ffffff' fill-opacity='0.9' stroke='%2338664b' stroke-width='1.1' /%3E%3Ccircle cx='124' cy='50' r='4.2' fill='%23ffffff' fill-opacity='0.9' stroke='%2338664b' stroke-width='1.1' /%3E%3Ccircle cx='116' cy='50' r='4.2' fill='%23ffffff' fill-opacity='0.9' stroke='%2338664b' stroke-width='1.1' /%3E%3Ccircle cx='114' cy='42.5' r='4.2' fill='%23ffffff' fill-opacity='0.9' stroke='%2338664b' stroke-width='1.1' /%3E%3C!-- Curved Sprig --%3E%3Cpath d='M100 120 C110 100 135 100 143 118 C135 136 110 136 100 120 Z' fill='%236da482' fill-opacity='0.16' /%3E%3Cpath d='M100 120 Q121 119 143 118' stroke-width='1' /%3E%3C!-- Small Flower --%3E%3Ccircle cx='40' cy='120' r='2.5' fill='%23df9e2c' fill-opacity='0.8' /%3E%3Ccircle cx='40' cy='114.5' r='3.5' fill='%23ffffff' fill-opacity='0.9' stroke='%2338664b' stroke-width='1' /%3E%3Ccircle cx='45' cy='118' r='3.5' fill='%23ffffff' fill-opacity='0.9' stroke='%2338664b' stroke-width='1' /%3E%3Ccircle cx='43.5' cy='124' r='3.5' fill='%23ffffff' fill-opacity='0.9' stroke='%2338664b' stroke-width='1' /%3E%3Ccircle cx='36.5' cy='124' r='3.5' fill='%23ffffff' fill-opacity='0.9' stroke='%2338664b' stroke-width='1' /%3E%3Ccircle cx='35' cy='118' r='3.5' fill='%23ffffff' fill-opacity='0.9' stroke='%2338664b' stroke-width='1' /%3E%3C!-- Floating Leaves & Petals --%3E%3Cpath d='M80 75 Q86 66 94 75 Q86 84 80 75 Z' fill='%236da482' fill-opacity='0.18' stroke='%2338664b' stroke-width='1' /%3E%3Ccircle cx='87' cy='75' r='1.5' fill='%2338664b' /%3E%3C/g%3E%3C/svg%3E") !important;
   background-attachment: fixed;
   color: var(--charcoal-900);
 }
@@ -170,8 +171,8 @@ body {
 .botanical-accent {
   pointer-events: none;
   user-select: none;
-  opacity: 0.16;
-  color: #446b53;
+  opacity: 0.25;
+  color: #38664b;
 }
 
 /* Focus Outlines */

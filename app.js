@@ -586,7 +586,7 @@ function renderScheduleBlocks() {
         }
       } else if (isFutureDate) {
         const formattedDate = formatDoseScheduledDate(item.scheduledDate || state.selectedDate);
-        statusMarkup = `<span class="text-xs font-bold bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-xl border border-emerald-200">Scheduled for ${formattedDate}</span>`;
+        statusMarkup = `<span class="text-xs font-bold bg-[#eaf4ee] text-[#2d553b] px-3 py-1.5 rounded-xl border border-[#cbdec7] flex items-center gap-1.5 shadow-xs"><span>🗓️</span> <span>Scheduled for ${formattedDate}</span></span>`;
       } else {
         if (item.status === "taken") {
           statusMarkup = `<div class="flex items-center gap-1.5 text-xs font-bold bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-xl border border-emerald-200"><span>âœ“</span> ${dict.taken}</div>`;
@@ -612,6 +612,7 @@ function renderScheduleBlocks() {
             <div>
               <div class="font-extrabold text-slate-800 text-base">${item.name} <span class="text-xs font-normal text-sky-600">(${item.dose})</span></div>
               <div class="text-xs text-slate-500 mt-0.5">${item.instructions || 'Take as directed'}</div>
+              <div class="text-xs text-[#2d553b] mt-1 flex items-center gap-1"><span>🗓️</span> Scheduled for <strong>${formatDoseScheduledDate(item.scheduledDate || state.selectedDate)}</strong></div>
             </div>
             ${statusMarkup}
           </div>
